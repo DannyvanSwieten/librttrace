@@ -1,5 +1,6 @@
 #include "device_factory.hpp"
 #include "cpu/device.hpp"
+#include "vulkan/device.hpp"
 
 Result<Device*> DeviceFactory::create_device(Api api)
 
@@ -16,6 +17,10 @@ Result<Device*> DeviceFactory::create_device(Api api)
 		{
 			return Result<Device*>::from_value(new CpuDevice());
 		}
+        case Api::VULKAN:
+        {
+            return Result<Device*>::from_value(new VulkanDevice());
+        }
 	}
 
 	return Result<Device*>::from_error("Unknown API");

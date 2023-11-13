@@ -4,6 +4,8 @@ cmake_minimum_required(VERSION 3.2)
 set(CMAKE_CXX_STANDARD 20)
 project(LibRtTrace VERSION 0.1.0 LANGUAGES CXX)
 
+find_package(Vulkan REQUIRED)
+
 # Create library target
 add_library(rttrace STATIC
     lib/api.hpp
@@ -32,9 +34,17 @@ add_library(rttrace STATIC
     lib/cpu/frame_buffer.cpp
     lib/cpu/acceleration_structure.hpp
     lib/cpu/acceleration_structure.cpp
+
+    lib/vulkan/device.hpp
+    lib/vulkan/device.cpp
+    lib/vulkan/index_buffer.hpp
+    lib/vulkan/index_buffer.cpp
+    lib/vulkan/vertex_buffer.hpp
+    lib/vulkan/vertex_buffer.cpp
 )
 
 set_target_properties(rttrace PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(rttrace Vulkan::Vulkan)
 
 # Create executable target
 add_executable(RtTrace
