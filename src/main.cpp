@@ -4,7 +4,7 @@
 int main()
 {
 	DeviceFactory factory;
-	auto result = factory.create_device(Api::CPU);
+	auto result = factory.create_device(Api::VULKAN);
 	if (result.is_error())
 	{
 		printf("Error: %s\n", result.error().c_str());

@@ -5,3 +5,6 @@ VulkanVertexBuffer::VulkanVertexBuffer(VkDevice device, const float* const data,
     VkBufferCreateInfo bufferInfo = {};
     vkCreateBuffer(device, &bufferInfo, nullptr, &m_buffer);
 }
+
+VulkanVertexBuffer::~VulkanVertexBuffer()
+{}

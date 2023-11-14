@@ -35,4 +35,12 @@ public:
 private:
     VkInstance m_instance;
 	VkDevice m_device;
+	VkPhysicalDevice m_physical_device;
+	VkPhysicalDeviceProperties m_physical_device_properties;
+	VkPhysicalDeviceMemoryProperties m_physical_device_memory_properties;
+	uint32_t m_compute_queue_family_index;
+
+	VkQueue m_queue;
+	VkCommandPool m_command_pool;
+	VkDescriptorPool m_descriptor_pool;
 };
