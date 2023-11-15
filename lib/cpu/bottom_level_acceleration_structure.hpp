@@ -1,12 +1,13 @@
 #pragma once
 #include <vector>
 #include "../bounding_box.hpp"
+#include "../bottom_level_acceleration_structure.hpp"
 class VertexBuffer;
 class IndexBuffer;
-class CpuAccelerationStructure
+class CpuBottomLevelAccelerationStructure: public BottomLevelAccelerationStructure
 {
 public:
-	CpuAccelerationStructure(const VertexBuffer* const vertex_buffer, size_t vertex_stride, const IndexBuffer* const index_buffer);
+	CpuBottomLevelAccelerationStructure(const VertexBuffer* const vertex_buffer, size_t vertex_stride, const IndexBuffer* const index_buffer);
 	void build(const VertexBuffer* const vertex_buffer, size_t vertex_stride, const IndexBuffer* const index_buffer);
 
 private:

@@ -1,10 +1,10 @@
 #include "../float3.hpp"
 
-#include "acceleration_structure.hpp"
+#include "bottom_level_acceleration_structure.hpp"
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
 
-CpuAccelerationStructure::CpuAccelerationStructure(const VertexBuffer* const vertex_buffer, size_t vertex_stride, const IndexBuffer* const index_buffer)
+CpuBottomLevelAccelerationStructure::CpuBottomLevelAccelerationStructure(const VertexBuffer* const vertex_buffer, size_t vertex_stride, const IndexBuffer* const index_buffer)
 {
 	const auto cpu_vertex_buffer = dynamic_cast<const CpuVertexBuffer&>(*vertex_buffer);
 	const auto cpu_index_buffer = dynamic_cast<const CpuIndexBuffer&>(*index_buffer);
@@ -14,7 +14,7 @@ CpuAccelerationStructure::CpuAccelerationStructure(const VertexBuffer* const ver
     m_nodes.reserve(cpu_index_buffer.size() / 3 * 2);
 }
 
-void CpuAccelerationStructure::build(const VertexBuffer* const vertex_buffer, size_t vertex_stride, const IndexBuffer* const index_buffer)
+void CpuBottomLevelAccelerationStructure::build(const VertexBuffer* const vertex_buffer, size_t vertex_stride, const IndexBuffer* const index_buffer)
 {
     const auto cpu_vertex_buffer = dynamic_cast<const CpuVertexBuffer&>(*vertex_buffer);
 	const auto cpu_index_buffer = dynamic_cast<const CpuIndexBuffer&>(*index_buffer);
@@ -48,7 +48,7 @@ void CpuAccelerationStructure::build(const VertexBuffer* const vertex_buffer, si
     subdivide(0, vertex_buffer, vertex_stride, index_buffer);
 }
 
-void CpuAccelerationStructure::update_bounds(size_t node_index,
+void CpuBottomLevelAccelerationStructure::update_bounds(size_t node_index,
                                              const VertexBuffer* const vertex_buffer,
                                              size_t vertex_stride,
                                              const IndexBuffer* const index_buffer)
@@ -82,7 +82,7 @@ void CpuAccelerationStructure::update_bounds(size_t node_index,
 	}
 }
 
-void CpuAccelerationStructure::subdivide(size_t node_index,
+void CpuBottomLevelAccelerationStructure::subdivide(size_t node_index,
                                          const VertexBuffer* const vertex_buffer,
                                          size_t vertex_stride,
                                          const IndexBuffer* const index_buffer)
@@ -140,7 +140,7 @@ void CpuAccelerationStructure::subdivide(size_t node_index,
     subdivide(right_node_index, vertex_buffer, vertex_stride, index_buffer);
 }
 
-float CpuAccelerationStructure::evaluate_sah(
+float CpuBottomLevelAccelerationStructure::evaluate_sah(
 	const Node& node, const VertexBuffer* const vertex_buffer, size_t vertex_stride, const IndexBuffer* const index_buffer, uint32_t axis, float position)
 {
     const auto cpu_vertex_buffer = dynamic_cast<const CpuVertexBuffer&>(*vertex_buffer);
@@ -197,8 +197,8 @@ float CpuAccelerationStructure::evaluate_sah(
     }
 }
 
-CpuAccelerationStructure::Split
-CpuAccelerationStructure::find_split(const Node& node, const VertexBuffer* const vertex_buffer, size_t vertex_stride, const IndexBuffer* const index_buffer)
+CpuBottomLevelAccelerationStructure::Split
+CpuBottomLevelAccelerationStructure::find_split(const Node& node, const VertexBuffer* const vertex_buffer, size_t vertex_stride, const IndexBuffer* const index_buffer)
 {
 	uint32_t best_axis = 0;
 	auto best_position = 0.0f;

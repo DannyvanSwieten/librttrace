@@ -2,7 +2,7 @@
 
 CpuVertexBuffer::CpuVertexBuffer(const float* const data, size_t size) : m_data(size)
 {
-	memcpy(m_data.data(), data, size);
+	memcpy(m_data.data(), data, size * sizeof(float));
 }
 
 CpuVertexBuffer::~CpuVertexBuffer()
