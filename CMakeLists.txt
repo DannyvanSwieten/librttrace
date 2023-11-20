@@ -41,6 +41,8 @@ add_library(rtintersect STATIC
     lib/cpu/frame_buffer.cpp
     lib/cpu/bottom_level_acceleration_structure.hpp
     lib/cpu/bottom_level_acceleration_structure.cpp
+    lib/cpu/command_buffer.hpp
+    lib/cpu/command_buffer.cpp
 
     lib/vulkan/device.hpp
     lib/vulkan/device.cpp
@@ -50,6 +52,10 @@ add_library(rtintersect STATIC
     lib/vulkan/vertex_buffer.cpp
     lib/vulkan/frame_buffer.hpp
     lib/vulkan/frame_buffer.cpp
+    lib/vulkan/command_buffer.hpp
+    lib/vulkan/command_buffer.cpp
+    lib/vulkan/bottom_level_acceleration_structure.hpp
+    lib/vulkan/bottom_level_acceleration_structure.cpp
 )
 
 set_target_properties(rtintersect PROPERTIES LINKER_LANGUAGE CXX)

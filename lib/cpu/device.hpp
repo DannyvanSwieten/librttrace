@@ -11,20 +11,13 @@ public:
 
 	Result<BottomLevelAccelerationStructure*>
 	alloc_acceleration_structure(const VertexBuffer* const vertex_buffer, size_t vertex_stride, const IndexBuffer* const index_buffer) override;
-	Result<Void> build_acceleration_structure(CommandBuffer* command_buffer,
-	                                          BottomLevelAccelerationStructure* acceleration_structure,
-	                                          const VertexBuffer* const vertex_buffer,
-	                                          size_t vertex_stride,
-	                                          const IndexBuffer* const index_buffer) override;
 
 	Result<TopLevelAccelerationStructure*> alloc_top_level_acceleration_structure(const BottomLevelAccelerationStructure* const acceleration_structures,
 	                                                                              size_t count) override;
-	Result<Void> build_acceleration_structure(CommandBuffer* command_buffer,
-	                                          TopLevelAccelerationStructure* tlas,
-	                                          const BottomLevelAccelerationStructure* const acceleration_structures,
-	                                          size_t count) override;
 
 	Result<FrameBuffer*> alloc_frame_buffer(PixelFormat format, uint32_t width, uint32_t height) override;
+
+	Result<CommandBuffer*> alloc_command_buffer() override;
 
 	Result<const char*> vendor_id() const override;
 

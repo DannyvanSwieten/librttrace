@@ -12,11 +12,23 @@ public:
 
 	size_t size() const override
 	{
-		return 0;
+		return m_memory_requirements.size;
+	}
+
+	VkBuffer handle() const
+	{
+		return m_buffer;
+	}
+
+	VkDeviceAddress device_address() const
+	{
+		return m_device_address;
 	}
 
 private:
 	VulkanDevice& m_device;
 	VkBuffer m_buffer;
 	VkDeviceMemory m_memory;
+	VkMemoryRequirements m_memory_requirements;
+	VkDeviceAddress m_device_address;
 };

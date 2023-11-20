@@ -4,17 +4,30 @@
 
 #include "../index_buffer.hpp"
 
-class VulkanIndexBuffer: public IndexBuffer
+class VulkanDevice;
+class VulkanIndexBuffer : public IndexBuffer
 {
 public:
-    VulkanIndexBuffer(VkDevice device, const uint32_t* const data, size_t size);
-    ~VulkanIndexBuffer();
+	VulkanIndexBuffer(VulkanDevice& device, const uint32_t* const data, size_t size);
+	~VulkanIndexBuffer();
 
-    size_t size() const override
-    {
-        return 0;
-    }
+	size_t size() const override
+	{
+		return m_memory_requirements.size;
+	}
 
-    VkBuffer getBuffer() const;
-    VkDeviceMemory getDeviceMemory() const;
+	VkDeviceAddress device_address() const
+	{
+		return m_device_address;
+	}
+
+	VkBuffer handle() const;
+	VkDeviceMemory device_memory() const;
+
+private:
+	VulkanDevice& m_device;
+	VkBuffer m_buffer;
+	VkDeviceMemory m_memory;
+	VkMemoryRequirements m_memory_requirements;
+	VkDeviceAddress m_device_address;
 };

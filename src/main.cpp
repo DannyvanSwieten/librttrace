@@ -4,18 +4,12 @@
 
 int main()
 {
-	const auto triangle_vertices = std::array<float, 9>{
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.0f,  0.5f, 0.0f
-	};
+	const auto triangle_vertices = std::array<float, 9>{ -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f };
 
-	const auto triangle_indices = std::array<uint32_t, 3>{
-		0, 1, 2
-	};
+	const auto triangle_indices = std::array<uint32_t, 3>{ 0, 1, 2 };
 
 	DeviceFactory factory;
-	auto result = factory.create_device(Api::CPU);
+	auto result = factory.create_device(Api::VULKAN);
 	if (result.is_error())
 	{
 		printf("Error: %s\n", result.error().c_str());
@@ -25,12 +19,12 @@ int main()
 	auto device = result.value();
 	printf("Device created: %s\n", device->vendor_id().value());
 
-    auto frame_buffer_result = device->alloc_frame_buffer(PixelFormat::RGBA32SFLOAT, 800, 600);
-    if (frame_buffer_result.is_error())
-    {
-        printf("Error: %s\n", frame_buffer_result.error().c_str());
-        return 1;
-    }
+	auto frame_buffer_result = device->alloc_frame_buffer(PixelFormat::RGBA32SFLOAT, 800, 600);
+	if (frame_buffer_result.is_error())
+	{
+		printf("Error: %s\n", frame_buffer_result.error().c_str());
+		return 1;
+	}
 
 	auto frame_buffer = frame_buffer_result.value();
 
@@ -61,6 +55,14 @@ int main()
 
 	const auto acceleration_structure = acceleration_structure_result.value();
 
-	device->build_acceleration_structure(nullptr, acceleration_structure, vertex_buffer, 3, index_buffer);
+	auto command_buffer_result = device->alloc_command_buffer();
+	if (command_buffer_result.is_error())
+	{
+		printf("Error: %s\n", command_buffer_result.error().c_str());
+		return 1;
+	}
+
+	auto command_buffer = command_buffer_result.value();
+	// command_buffer->build_acceleration_structure(acceleration_structure, vertex_buffer, 3, index_buffer);
 	return 0;
 }
