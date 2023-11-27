@@ -14,10 +14,9 @@ public:
 	Result<IndexBuffer*> alloc_index_buffer(const uint32_t* const data, size_t count);
 
 	Result<BottomLevelAccelerationStructure*>
-	alloc_acceleration_structure(const VertexBuffer* const vertex_buffer, size_t vertex_stride, const IndexBuffer* const index_buffer);
+	alloc_bottom_level_acceleration_structure(const VertexBuffer* const vertex_buffer, size_t vertex_stride, const IndexBuffer* const index_buffer);
 
-	Result<TopLevelAccelerationStructure*> alloc_top_level_acceleration_structure(const BottomLevelAccelerationStructure* const acceleration_structures,
-	                                                                              size_t count);
+	Result<TopLevelAccelerationStructure*> alloc_top_level_acceleration_structure(const Instance* const acceleration_structures, size_t count);
 	Result<FrameBuffer*> alloc_frame_buffer(PixelFormat format, uint32_t width, uint32_t height);
 
 	Result<CommandBuffer*> alloc_command_buffer();

@@ -23,3 +23,8 @@ VulkanBottomLevelAccelerationStructure::VulkanBottomLevelAccelerationStructure(D
 	triangles_data.indexData.deviceAddress = vk_index_buffer.device_address();
 	triangles_data.maxVertex = vk_vertex_buffer.size() / vertex_stride;
 }
+
+Instance VulkanBottomLevelAccelerationStructure::create_instance(uint32_t instance_id, InstanceMask mask, const float* transform)
+{
+	return Instance();
+}

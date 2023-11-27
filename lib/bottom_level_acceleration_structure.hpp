@@ -1,7 +1,9 @@
 #pragma once
 
+#include "instance.hpp"
 class BottomLevelAccelerationStructure
 {
 public:
-    virtual ~BottomLevelAccelerationStructure() = 0;
+	virtual ~BottomLevelAccelerationStructure() = 0;
+	virtual Instance create_instance(uint32_t instance_id, InstanceMask mask, const float* transform) = 0;
 };

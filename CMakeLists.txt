@@ -22,14 +22,22 @@ add_library(rtintersect STATIC
     lib/result.hpp
     lib/float3.hpp
     lib/float3.cpp
+    lib/transform.hpp
+    lib/transform.cpp
+    lib/quaternion.hpp
+    lib/quaternion.cpp
     lib/bounding_box.hpp
     lib/bounding_box.cpp
     lib/bottom_level_acceleration_structure.hpp
     lib/bottom_level_acceleration_structure.cpp
+    lib/top_level_acceleration_structure.hpp
+    lib/top_level_acceleration_structure.cpp
     lib/intersector.hpp
     lib/intersector.cpp
     lib/command_buffer.hpp
     lib/command_buffer.cpp
+    lib/resource_ctx.hpp
+    lib/resource_ctx.cpp
 
     lib/cpu/device.hpp
     lib/cpu/device.cpp
@@ -41,8 +49,12 @@ add_library(rtintersect STATIC
     lib/cpu/frame_buffer.cpp
     lib/cpu/bottom_level_acceleration_structure.hpp
     lib/cpu/bottom_level_acceleration_structure.cpp
+    lib/cpu/top_level_acceleration_structure.hpp
+    lib/cpu/top_level_acceleration_structure.cpp
     lib/cpu/command_buffer.hpp
     lib/cpu/command_buffer.cpp
+    lib/cpu/intersect.hpp
+    lib/cpu/intersect.cpp
 
     lib/vulkan/device.hpp
     lib/vulkan/device.cpp

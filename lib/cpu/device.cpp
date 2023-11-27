@@ -4,7 +4,7 @@
 #include "frame_buffer.hpp"
 #include "bottom_level_acceleration_structure.hpp"
 #include "command_buffer.hpp"
-
+#include "top_level_acceleration_structure.hpp"
 #include <limits.h>
 #include <intrin.h>
 
@@ -47,15 +47,16 @@ Result<IndexBuffer*> CpuDevice::alloc_index_buffer(const uint32_t* const data, s
 }
 
 Result<BottomLevelAccelerationStructure*>
-CpuDevice::alloc_acceleration_structure(const VertexBuffer* const vertex_buffer, size_t vertex_stride, const IndexBuffer* const index_buffer)
+CpuDevice::alloc_bottom_level_acceleration_structure(const VertexBuffer* const vertex_buffer, size_t vertex_stride, const IndexBuffer* const index_buffer)
 {
-	return Result<BottomLevelAccelerationStructure*>::from_value(new CpuBottomLevelAccelerationStructure(vertex_buffer, vertex_stride, index_buffer));
+	auto cpu_vertex_buffer = static_cast<const CpuVertexBuffer* const>(vertex_buffer);
+	auto cpu_index_buffer = static_cast<const CpuIndexBuffer* const>(index_buffer);
+	return Result<BottomLevelAccelerationStructure*>::from_value(new CpuBottomLevelAccelerationStructure(cpu_vertex_buffer, vertex_stride, cpu_index_buffer));
 }
 
-Result<TopLevelAccelerationStructure*> CpuDevice::alloc_top_level_acceleration_structure(const BottomLevelAccelerationStructure* const acceleration_structures,
-                                                                                         size_t count)
+Result<TopLevelAccelerationStructure*> CpuDevice::alloc_top_level_acceleration_structure(const Instance* const instances, size_t count)
 {
-	return Result<TopLevelAccelerationStructure*>::from_error("not implemented");
+	return Result<TopLevelAccelerationStructure*>::from_value(new CpuTopLevelAccelerationStructure(instances, count));
 }
 
 Result<FrameBuffer*> CpuDevice::alloc_frame_buffer(PixelFormat format, uint32_t width, uint32_t height)

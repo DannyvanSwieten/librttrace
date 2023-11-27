@@ -139,13 +139,12 @@ Result<IndexBuffer*> VulkanDevice::alloc_index_buffer(const uint32_t* const data
 }
 
 Result<BottomLevelAccelerationStructure*>
-VulkanDevice::alloc_acceleration_structure(const VertexBuffer* const vertex_buffer, size_t vertex_stride, const IndexBuffer* const index_buffer)
+VulkanDevice::alloc_bottom_level_acceleration_structure(const VertexBuffer* const vertex_buffer, size_t vertex_stride, const IndexBuffer* const index_buffer)
 {
 	return Result<BottomLevelAccelerationStructure*>::from_value(new VulkanBottomLevelAccelerationStructure(*this, vertex_buffer, vertex_stride, index_buffer));
 }
 
-Result<TopLevelAccelerationStructure*>
-VulkanDevice::alloc_top_level_acceleration_structure(const BottomLevelAccelerationStructure* const acceleration_structures, size_t count)
+Result<TopLevelAccelerationStructure*> VulkanDevice::alloc_top_level_acceleration_structure(const Instance* const acceleration_structures, size_t count)
 {
 	return Result<TopLevelAccelerationStructure*>::from_error("Not implemented");
 }
@@ -157,7 +156,7 @@ Result<FrameBuffer*> VulkanDevice::alloc_frame_buffer(PixelFormat format, uint32
 
 Result<CommandBuffer*> VulkanDevice::alloc_command_buffer()
 {
-	return Result<CommandBuffer*>::from_value(new VulkanCommandBuffer(*this));
+	return Result<CommandBuffer*>::from_error("Not implemented");
 }
 
 Result<const char*> VulkanDevice::vendor_id() const

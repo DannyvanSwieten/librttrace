@@ -16,15 +16,22 @@ VulkanCommandBuffer::VulkanCommandBuffer(VulkanDevice& device) : m_device(device
 	assert(result == VK_SUCCESS);
 }
 
-Result<Void> VulkanCommandBuffer::build_acceleration_structure(BottomLevelAccelerationStructure* const acceleration_structure,
-                                                               const VertexBuffer* const vertex_buffer,
-                                                               size_t vertex_stride,
-                                                               const IndexBuffer* const index_buffer)
+Result<Void> VulkanCommandBuffer::build_bottom_level_acceleration_structure(BottomLevelAccelerationStructure* const acceleration_structure,
+                                                                            const VertexBuffer* const vertex_buffer,
+                                                                            size_t vertex_stride,
+                                                                            const IndexBuffer* const index_buffer)
 {
 	return Result<Void>::from_error("Not implemented");
 }
 
-Result<Void> VulkanCommandBuffer::intersect(const BottomLevelAccelerationStructure* const acceleration_structure)
+Result<Void> VulkanCommandBuffer::build_top_level_acceleration_structure(TopLevelAccelerationStructure* const acceleration_structure,
+                                                                         const Instance* const instances,
+                                                                         size_t count)
+{
+	return Result<Void>::from_error("Not implemented");
+}
+
+Result<Void> VulkanCommandBuffer::trace_rays(ResourceContext* resource_ctx, uint32_t x, uint32_t y)
 {
 	return Result<Void>::from_error("Not implemented");
 }
