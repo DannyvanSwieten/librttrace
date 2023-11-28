@@ -20,7 +20,7 @@ const TopLevelAccelerationStructure* const ResourceContext::get_acceleration_str
 	return m_acceleration_structures[id];
 }
 
-const std::map<size_t, const TopLevelAccelerationStructure*>& ResourceContext::acceleration_structures() const
+const std::array<const TopLevelAccelerationStructure*, 1>& ResourceContext::acceleration_structures() const
 {
 	return m_acceleration_structures;
 }

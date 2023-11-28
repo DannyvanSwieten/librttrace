@@ -11,13 +11,14 @@ CpuFrameBuffer::CpuFrameBuffer(PixelFormat format, uint32_t width, uint32_t heig
 
 void CpuFrameBuffer::set_pixel(uint32_t x, uint32_t y, float r, float g, float b, float a)
 {
-	size_t offset = (x + y * m_width) * m_bytes_per_pixel;
+	size_t offset = (x + y * m_width) * 4;
 	if (m_bytes_per_pixel == 16)
 	{
-		*reinterpret_cast<float*>(&m_data[offset + 0]) = r;
-		*reinterpret_cast<float*>(&m_data[offset + 4]) = g;
-		*reinterpret_cast<float*>(&m_data[offset + 8]) = b;
-		*reinterpret_cast<float*>(&m_data[offset + 12]) = a;
+		auto address = reinterpret_cast<float*>(m_data.data()) + offset;
+		address[0] = r;
+		address[1] = g;
+		address[2] = b;
+		address[3] = a;
 	}
 	else
 	{
@@ -45,5 +46,5 @@ uint32_t CpuFrameBuffer::width()
 
 uint32_t CpuFrameBuffer::height()
 {
-    return m_height;
+	return m_height;
 }

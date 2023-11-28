@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <stdexcept>
 
 class Device;
 struct Void
@@ -24,6 +25,15 @@ public:
 		{
 			return Result(nullptr, error);
 		}
+	}
+
+	T expect(const std::string_view message) const
+	{
+		if (is_error())
+		{
+			throw std::runtime_error(std::string(message) + ": " + m_error);
+		}
+		return m_value;
 	}
 
 	T value() const

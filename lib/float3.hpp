@@ -1,72 +1,67 @@
 #pragma once
-
-struct Float3
+#include <ostream>
+struct alignas(16) Float3
 {
-    float x, y, z;
-    float pad = 1;
+	float x, y, z;
 
-    Float3() = default;
-    Float3(float x, float y, float z)
-        : x(x), y(y), z(z)
-    {
-    }
-    Float3(float x)
-        : x(x), y(x), z(x)
-    {
-    }
+	Float3() = default;
+	Float3(float x, float y, float z) : x(x), y(y), z(z)
+	{}
+	Float3(float x) : x(x), y(x), z(x)
+	{}
 
-    float operator[](int index) const
-    {
-        return (&x)[index];
-    }
+	float operator[](int index) const
+	{
+		return (&x)[index];
+	}
 
-    Float3 operator+=(const Float3& b)
-    {
-        x += b.x;
-        y += b.y;
-        z += b.z;
-        return *this;
-    }
+	Float3 operator+=(const Float3& b)
+	{
+		x += b.x;
+		y += b.y;
+		z += b.z;
+		return *this;
+	}
 
-    Float3 operator-=(const Float3& b)
-    {
-        x -= b.x;
-        y -= b.y;
-        z -= b.z;
-        return *this;
-    }
+	Float3 operator-=(const Float3& b)
+	{
+		x -= b.x;
+		y -= b.y;
+		z -= b.z;
+		return *this;
+	}
 
-    Float3 operator*=(const Float3& b)
-    {
-        x *= b.x;
-        y *= b.y;
-        z *= b.z;
-        return *this;
-    }
+	Float3 operator*=(const Float3& b)
+	{
+		x *= b.x;
+		y *= b.y;
+		z *= b.z;
+		return *this;
+	}
 
-    Float3 operator*=(float b)
-    {
-        x *= b;
-        y *= b;
-        z *= b;
-        return *this;
-    }
+	Float3 operator*=(float b)
+	{
+		x *= b;
+		y *= b;
+		z *= b;
+		return *this;
+	}
 
-    Float3 operator/=(const Float3& b)
-    {
-        x /= b.x;
-        y /= b.y;
-        z /= b.z;
-        return *this;
-    }
+	Float3 operator/=(const Float3& b)
+	{
+		x /= b.x;
+		y /= b.y;
+		z /= b.z;
+		return *this;
+	}
 
-    Float3 operator/=(float b)
-    {
-        x /= b;
-        y /= b;
-        z /= b;
-        return *this;
-    }
+	Float3 operator/=(float b)
+	{
+		x /= b;
+		y /= b;
+		z /= b;
+		return *this;
+	}
 };
 
 Float3 operator+(const Float3& a, const Float3& b);
@@ -86,3 +81,5 @@ Float3 sqrt(const Float3& a);
 Float3 abs(const Float3& a);
 Float3 min(const Float3& a, const Float3& b);
 Float3 max(const Float3& a, const Float3& b);
+
+std::ostream& operator<<(std::ostream& os, const Float3& a);

@@ -38,6 +38,14 @@ add_library(rtintersect STATIC
     lib/command_buffer.cpp
     lib/resource_ctx.hpp
     lib/resource_ctx.cpp
+    lib/image.hpp
+    lib/image.cpp
+    lib/pipeline.hpp
+    lib/pipeline.cpp
+    lib/ray_generation_program.hpp
+    lib/ray_generation_program.cpp
+    lib/compiler/instructions.hpp
+    lib/compiler/instructions.cpp
 
     lib/cpu/device.hpp
     lib/cpu/device.cpp
@@ -55,6 +63,8 @@ add_library(rtintersect STATIC
     lib/cpu/command_buffer.cpp
     lib/cpu/intersect.hpp
     lib/cpu/intersect.cpp
+    lib/cpu/vm.hpp
+    lib/cpu/vm.cpp
 
     lib/vulkan/device.hpp
     lib/vulkan/device.cpp
@@ -72,6 +82,7 @@ add_library(rtintersect STATIC
 
 set_target_properties(rtintersect PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(rtintersect Vulkan::Vulkan)
+target_compile_options(rtintersect PRIVATE /fp:fast)
 
 # Create executable target
 add_executable(RtTrace
