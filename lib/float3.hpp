@@ -1,65 +1,66 @@
 #pragma once
+// #ifdef __SSE2__
+#include <smmintrin.h>
+// #endif
 #include <ostream>
 struct alignas(16) Float3
 {
-	float x, y, z;
+	union f32x4
+	{
+		float f[4];
+		__m128 data;
+	};
+
+	f32x4 data;
 
 	Float3() = default;
-	Float3(float x, float y, float z) : x(x), y(y), z(z)
+	Float3(__m128 data) : data({ .data = data })
 	{}
-	Float3(float x) : x(x), y(x), z(x)
+	Float3(f32x4 data) : data(data)
+	{}
+	Float3(float x, float y, float z) : data({ .data = _mm_set_ps(1.0, z, y, x) })
+	{}
+	Float3(float x) : data({ .data = _mm_set_ps(1.0, x, x, x) })
 	{}
 
 	float operator[](int index) const
 	{
-		return (&x)[index];
+		return data.f[index];
 	}
 
 	Float3 operator+=(const Float3& b)
 	{
-		x += b.x;
-		y += b.y;
-		z += b.z;
+		data.data = _mm_add_ps(data.data, b.data.data);
 		return *this;
 	}
 
 	Float3 operator-=(const Float3& b)
 	{
-		x -= b.x;
-		y -= b.y;
-		z -= b.z;
+		data.data = _mm_sub_ps(data.data, b.data.data);
 		return *this;
 	}
 
 	Float3 operator*=(const Float3& b)
 	{
-		x *= b.x;
-		y *= b.y;
-		z *= b.z;
+		data.data = _mm_mul_ps(data.data, b.data.data);
 		return *this;
 	}
 
 	Float3 operator*=(float b)
 	{
-		x *= b;
-		y *= b;
-		z *= b;
+		data.data = _mm_mul_ps(data.data, _mm_set_ps(b, b, b, 0.0));
 		return *this;
 	}
 
 	Float3 operator/=(const Float3& b)
 	{
-		x /= b.x;
-		y /= b.y;
-		z /= b.z;
+		data.data = _mm_div_ps(data.data, b.data.data);
 		return *this;
 	}
 
 	Float3 operator/=(float b)
 	{
-		x /= b;
-		y /= b;
-		z /= b;
+		data.data = _mm_div_ps(data.data, _mm_set_ps(b, b, b, 1.0));
 		return *this;
 	}
 };

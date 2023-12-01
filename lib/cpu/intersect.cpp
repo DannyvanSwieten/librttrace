@@ -36,7 +36,7 @@ bool intersect_bounding_box(const Float3& ray_origin, const Float3& ray_directio
 	const auto t1 = (bounding_box.m_max - ray_origin) * inv_ray_direction;
 	const auto t_min_v = min(t0, t1);
 	const auto t_max_v = max(t0, t1);
-	t_min = std::max(t_min_v.x, std::max(t_min_v.y, t_min_v.z));
-	const auto t_max = std::min(t_max_v.x, std::min(t_max_v.y, t_max_v.z));
+	t_min = std::max(t_min_v[0], std::max(t_min_v[1], t_min_v[2]));
+	const auto t_max = std::min(t_max_v[0], std::min(t_max_v[1], t_max_v[2]));
 	return t_max >= std::max(0.0f, t_min) && t_min < t;
 }

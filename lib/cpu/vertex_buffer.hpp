@@ -1,4 +1,5 @@
 #pragma once
+#include "../float3.hpp"
 #include "../vertex_buffer.hpp"
 #include <vector>
 
@@ -17,6 +18,14 @@ public:
 	const float* data() const
 	{
 		return m_data.data();
+	}
+
+	const Float3 float3(size_t index) const
+	{
+		float x = m_data[index];
+		float y = m_data[index + 1];
+		float z = m_data[index + 2];
+		return Float3(x, y, z);
 	}
 
 private:

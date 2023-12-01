@@ -6,9 +6,9 @@ Quaternion rotate(const Quaternion& q, const Float3& axis, float angle)
 	Quaternion result;
 	float half_angle = angle * 0.5f;
 	float sin_half_angle = std::sin(half_angle);
-	result.x = axis.x * sin_half_angle;
-	result.y = axis.y * sin_half_angle;
-	result.z = axis.z * sin_half_angle;
+	result.x = axis[0] * sin_half_angle;
+	result.y = axis[1] * sin_half_angle;
+	result.z = axis[2] * sin_half_angle;
 	result.w = std::cos(half_angle);
 	return result * q;
 }

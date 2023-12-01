@@ -1,4 +1,5 @@
 #pragma once
+#include <array>
 #include <map>
 #include "../compiler/instructions.hpp"
 
@@ -13,6 +14,9 @@ namespace vm::globals {
 class VirtualMachine
 {
 public:
-	void execute(
+	const std::array<Float3, 16>& execute(
 		const instructions::ShaderProgram& program, std::array<Value, 4>& globals, int thread_id_x, int thread_id_y, int thread_count_x, int thread_count_y);
+
+private:
+	std::array<Float3, 16> registers;
 };

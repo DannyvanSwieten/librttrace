@@ -16,7 +16,7 @@ public:
 	Result<Void>
 	build_top_level_acceleration_structure(TopLevelAccelerationStructure* const acceleration_structure, const Instance* const instances, size_t count) override;
 
-	Result<Void> trace_rays(ResourceContext* resource_ctx, uint32_t x, uint32_t y) override;
+	Result<Void> trace_rays(const Pipeline* pipeline, ResourceContext* resource_ctx, uint32_t x, uint32_t y) override;
 
 private:
 	VulkanDevice& m_device;

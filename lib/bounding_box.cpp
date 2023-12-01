@@ -34,11 +34,11 @@ Float3 BoundingBox::size() const
 float BoundingBox::area() const
 {
 	const auto s = size();
-	return 2.0f * (s.x * s.y + s.x * s.z + s.y * s.z);
+	return 2.0f * (s[0] * s[1] + s[0] * s[2] + s[1] * s[2]);
 }
 
 float BoundingBox::volume() const
 {
 	const auto s = size();
-	return s.x * s.y * s.z;
+	return s[0] * s[1] * s[2];
 }

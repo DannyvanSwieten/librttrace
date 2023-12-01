@@ -39,6 +39,7 @@ private:
 	Split find_split(const Node& node, const CpuVertexBuffer& vertex_buffer, size_t vertex_stride, const CpuIndexBuffer& index_buffer);
 
 	const CpuVertexBuffer* m_vertex_buffer;
+	const CpuIndexBuffer* m_index_buffer;
 	uint32_t m_vertex_stride;
 	std::vector<uint32_t> m_triangle_indices;
 	std::vector<Float3> m_triangle_centroids;

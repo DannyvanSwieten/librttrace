@@ -6,6 +6,7 @@ class IndexBuffer;
 class BottomLevelAccelerationStructure;
 class TopLevelAccelerationStructure;
 class ResourceContext;
+class Pipeline;
 struct Instance;
 class CommandBuffer
 {
@@ -20,5 +21,5 @@ public:
 	virtual Result<Void>
 	build_top_level_acceleration_structure(TopLevelAccelerationStructure* const acceleration_structure, const Instance* const instances, size_t count) = 0;
 
-	virtual Result<Void> trace_rays(ResourceContext* resource_ctx, uint32_t x, uint32_t y) = 0;
+	virtual Result<Void> trace_rays(const Pipeline* pipeline, ResourceContext* resource_ctx, uint32_t x, uint32_t y) = 0;
 };

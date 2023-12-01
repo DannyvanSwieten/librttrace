@@ -5,50 +5,45 @@
 #include <string_view>
 #include "../float3.hpp"
 
-struct ThreadId
-{};
-struct ThreadCount
-{};
 struct Register
 {
-	int index;
+	uint32_t index;
 };
 
 struct Global
 {
 	size_t name;
 };
-using Value = std::variant<int, float, Float3, Register, Global>;
+
+using Constant = std::variant<int, float, Float3>;
+using Value = std::variant<Constant, Register, Global>;
 
 Float3 get_value(const Value& value, const std::array<Float3, 16>& registers, const std::array<Value, 4>& globals);
+Float3 get_value(const Constant& constant);
 
 namespace instructions {
 	struct Add
 	{
 		Value a;
 		Value b;
-		Register result;
 	};
 
 	struct Sub
 	{
 		Value a;
 		Value b;
-		Register result;
 	};
 
 	struct Mul
 	{
 		Value a;
 		Value b;
-		Register result;
 	};
 
 	struct Div
 	{
 		Value a;
 		Value b;
-		Register result;
 	};
 
 	struct Neg
@@ -59,13 +54,12 @@ namespace instructions {
 	struct Load
 	{
 		Value src;
-		Register dst;
 	};
 
 	struct Store
 	{
 		Value src;
-		Global name;
+		Register name;
 	};
 
 	struct Call
@@ -79,7 +73,6 @@ namespace instructions {
 	struct Normalize
 	{
 		Value src;
-		Register dst;
 	};
 
 	// struct Jump
@@ -225,35 +218,41 @@ namespace instructions {
 	// 	Value a;
 	// };
 
-	using Instruction = std::variant<Add, Sub, Mul, Div, Neg, Load, Store, Call, Return, Normalize
-	                                 // Jump,
-	                                 // JumpIf,
-	                                 // JumpIfNot,
-	                                 // JumpIfLess,
-	                                 // JumpIfLessOrEqual,
-	                                 // JumpIfGreater,
-	                                 // JumpIfGreaterOrEqual,
-	                                 // JumpIfEqual,
-	                                 // JumpIfNotEqual,
-	                                 // JumpIfZero,
-	                                 // JumpIfNotZero,
-	                                 // JumpIfNegative,
-	                                 // JumpIfNotNegative,
-	                                 // JumpIfPositive,
-	                                 // JumpIfNotPositive,
-	                                 // JumpIfOdd,
-	                                 // JumpIfNotOdd,
-	                                 // JumpIfEven,
-	                                 // JumpIfNotEven,
-	                                 // JumpIfCarry,
-	                                 // JumpIfNotCarry,
-	                                 // JumpIfOverflow,
-	                                 // JumpIfNotOverflow,
-	                                 // JumpIfSign,
-	                                 // JumpIfNotSign,
-	                                 // JumpIfZeroOrCarry,
-	                                 // JumpIfNotZeroOrCarry
-	                                 >;
+	using OpCode = std::variant<Add, Sub, Mul, Div, Neg, Load, Store, Call, Return, Normalize
+	                            // Jump,
+	                            // JumpIf,
+	                            // JumpIfNot,
+	                            // JumpIfLess,
+	                            // JumpIfLessOrEqual,
+	                            // JumpIfGreater,
+	                            // JumpIfGreaterOrEqual,
+	                            // JumpIfEqual,
+	                            // JumpIfNotEqual,
+	                            // JumpIfZero,
+	                            // JumpIfNotZero,
+	                            // JumpIfNegative,
+	                            // JumpIfNotNegative,
+	                            // JumpIfPositive,
+	                            // JumpIfNotPositive,
+	                            // JumpIfOdd,
+	                            // JumpIfNotOdd,
+	                            // JumpIfEven,
+	                            // JumpIfNotEven,
+	                            // JumpIfCarry,
+	                            // JumpIfNotCarry,
+	                            // JumpIfOverflow,
+	                            // JumpIfNotOverflow,
+	                            // JumpIfSign,
+	                            // JumpIfNotSign,
+	                            // JumpIfZeroOrCarry,
+	                            // JumpIfNotZeroOrCarry
+	                            >;
+
+	struct Instruction
+	{
+		OpCode op_code;
+		Register dst;
+	};
 
 	struct ShaderProgram
 	{

@@ -12,6 +12,7 @@ CpuBottomLevelAccelerationStructure::CpuBottomLevelAccelerationStructure(const C
                                                                          size_t vertex_stride,
                                                                          const CpuIndexBuffer* const index_buffer)
 	: m_vertex_buffer(vertex_buffer)
+	, m_index_buffer(index_buffer)
 	, m_vertex_stride(static_cast<uint32_t>(vertex_stride))
 {
 	m_triangle_indices.reserve(index_buffer->size() / 3);
@@ -34,11 +35,11 @@ void CpuBottomLevelAccelerationStructure::build(const CpuVertexBuffer& vertex_bu
 		auto i2 = index_buffer[i + 2];
 
 		auto index = i0 * vertex_stride;
-		auto v0 = Float3(vertex_buffer[index], vertex_buffer[index + 1], vertex_buffer[index + 2]);
+		auto v0 = vertex_buffer.float3(index);
 		index = i1 * vertex_stride;
-		auto v1 = Float3(vertex_buffer[index], vertex_buffer[index + 1], vertex_buffer[index + 2]);
+		auto v1 = vertex_buffer.float3(index);
 		index = i2 * vertex_stride;
-		auto v2 = Float3(vertex_buffer[index], vertex_buffer[index + 1], vertex_buffer[index + 2]);
+		auto v2 = vertex_buffer.float3(index);
 
 		m_triangle_centroids.emplace_back((v0 + v1 + v2) / 3.0f);
 		m_bounding_box.grow(v0);
@@ -49,6 +50,7 @@ void CpuBottomLevelAccelerationStructure::build(const CpuVertexBuffer& vertex_bu
 	m_nodes[0].m_primitive_count = static_cast<uint32_t>(m_triangle_indices.size());
 	update_bounds(0, vertex_buffer, vertex_stride, index_buffer);
 	subdivide(0, vertex_buffer, vertex_stride, index_buffer);
+	m_nodes.resize(m_nodes_used);
 }
 
 void CpuBottomLevelAccelerationStructure::update_bounds(size_t node_index,
@@ -63,17 +65,16 @@ void CpuBottomLevelAccelerationStructure::update_bounds(size_t node_index,
 	for (size_t i = first_primitive; i < last_primitive; ++i)
 	{
 		const auto triangle_index = m_triangle_indices[i];
-		const auto triangle_centroid = m_triangle_centroids[triangle_index];
-		auto i0 = index_buffer[triangle_index];
-		auto i1 = index_buffer[triangle_index + 1];
-		auto i2 = index_buffer[triangle_index + 2];
+		const auto i0 = index_buffer[triangle_index];
+		const auto i1 = index_buffer[triangle_index + 1];
+		const auto i2 = index_buffer[triangle_index + 2];
 
 		auto index = i0 * vertex_stride;
-		auto v0 = Float3(vertex_buffer[index], vertex_buffer[index + 1], vertex_buffer[index + 2]);
+		const auto v0 = vertex_buffer.float3(index);
 		index = i1 * vertex_stride;
-		auto v1 = Float3(vertex_buffer[index], vertex_buffer[index + 1], vertex_buffer[index + 2]);
+		const auto v1 = vertex_buffer.float3(index);
 		index = i2 * vertex_stride;
-		auto v2 = Float3(vertex_buffer[index], vertex_buffer[index + 1], vertex_buffer[index + 2]);
+		const auto v2 = vertex_buffer.float3(index);
 
 		const auto minimum = min(min(v0, v1), v2);
 		const auto maximum = max(max(v0, v1), v2);
@@ -97,11 +98,11 @@ void CpuBottomLevelAccelerationStructure::subdivide(size_t node_index,
 	}
 
 	auto i = node.m_first_primitive;
-	auto j = node.m_first_primitive + node.m_primitive_count - 1;
+	auto j = i + node.m_primitive_count - 1;
 	while (i <= j)
 	{
 		const auto triangle_index = m_triangle_indices[i];
-		const auto triangle_centroid = m_triangle_centroids[triangle_index];
+		const auto& triangle_centroid = m_triangle_centroids[triangle_index / 3];
 		if (triangle_centroid[split.m_axis] < split.m_position)
 		{
 			++i;
@@ -155,19 +156,19 @@ float CpuBottomLevelAccelerationStructure::evaluate_sah(
 	for (uint32_t i = first; i < last; ++i)
 	{
 		const auto triangle_index = m_triangle_indices[i];
-		const auto& triangle_centroid = m_triangle_centroids[triangle_index];
+		const auto& triangle_centroid = m_triangle_centroids[triangle_index / 3];
 		auto i0 = index_buffer[triangle_index];
 		auto i1 = index_buffer[triangle_index + 1];
 		auto i2 = index_buffer[triangle_index + 2];
 
 		auto index = i0 * vertex_stride;
-		auto v0 = Float3(vertex_buffer[index], vertex_buffer[index + 1], vertex_buffer[index + 2]);
+		auto v0 = vertex_buffer.float3(index);
 		index = i1 * vertex_stride;
-		auto v1 = Float3(vertex_buffer[index], vertex_buffer[index + 1], vertex_buffer[index + 2]);
+		auto v1 = vertex_buffer.float3(index);
 		index = i2 * vertex_stride;
-		auto v2 = Float3(vertex_buffer[index], vertex_buffer[index + 1], vertex_buffer[index + 2]);
+		auto v2 = vertex_buffer.float3(index);
 
-		if (triangle_centroid[static_cast<size_t>(axis)])
+		if (triangle_centroid[static_cast<size_t>(axis)] < position)
 		{
 			++left_count;
 			left_bb.grow(v0);
@@ -233,9 +234,10 @@ CpuBottomLevelAccelerationStructure::Split CpuBottomLevelAccelerationStructure::
 void CpuBottomLevelAccelerationStructure::intersect(const Float3& origin, const Float3& dir, float t_min, HitRecord& record) const
 {
 	// Intersect bvh
-	std::array<uint32_t, 64> stack;
+	std::array<uint32_t, 32> stack;
 	uint32_t node_index = 0;
 	uint32_t stack_ptr = 0;
+
 	while (true)
 	{
 		const auto& node = m_nodes[node_index];
@@ -244,13 +246,12 @@ void CpuBottomLevelAccelerationStructure::intersect(const Float3& origin, const 
 			for (uint32_t i = 0; i < node.m_primitive_count; ++i)
 			{
 				const auto triangle_index = m_triangle_indices[node.m_first_primitive + i];
-				assert(triangle_index == 0);
-				const auto i0 = triangle_index * m_vertex_stride;
-				const auto i1 = (triangle_index + 1) * m_vertex_stride;
-				const auto i2 = (triangle_index + 2) * m_vertex_stride;
-				const auto v0 = Float3((*m_vertex_buffer)[i0], (*m_vertex_buffer)[i0 + 1], (*m_vertex_buffer)[i0 + 2]);
-				const auto v1 = Float3((*m_vertex_buffer)[i1], (*m_vertex_buffer)[i1 + 1], (*m_vertex_buffer)[i1 + 2]);
-				const auto v2 = Float3((*m_vertex_buffer)[i2], (*m_vertex_buffer)[i2 + 1], (*m_vertex_buffer)[i2 + 2]);
+				const auto i0 = m_index_buffer->operator[](triangle_index) * m_vertex_stride;
+				const auto i1 = m_index_buffer->operator[](triangle_index + 1) * m_vertex_stride;
+				const auto i2 = m_index_buffer->operator[](triangle_index + 2) * m_vertex_stride;
+				const auto v0 = Float3(m_vertex_buffer->operator[](i0), m_vertex_buffer->operator[](i0 + 1), m_vertex_buffer->operator[](i0 + 2));
+				const auto v1 = Float3(m_vertex_buffer->operator[](i1), m_vertex_buffer->operator[](i1 + 1), m_vertex_buffer->operator[](i1 + 2));
+				const auto v2 = Float3(m_vertex_buffer->operator[](i2), m_vertex_buffer->operator[](i2 + 1), m_vertex_buffer->operator[](i2 + 2));
 				float t, u, v;
 				if (intersect_muller_trumbore(origin, dir, v0, v1, v2, t, u, v))
 				{

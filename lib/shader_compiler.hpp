@@ -1,14 +1,15 @@
 #pragma once
-#include <variant>
 #include "api.hpp"
+#include "result.hpp"
+#include "compiler/instructions.hpp"
 
-class ShaderProgram
-{
-public:
-};
-
+class RayGenerationProgram;
 class ShaderCompiler
 {
 public:
 	ShaderCompiler(Api api);
+	Result<RayGenerationProgram*> compile_ray_generation_program(const instructions::ShaderProgram& program);
+
+private:
+	Api m_api;
 };

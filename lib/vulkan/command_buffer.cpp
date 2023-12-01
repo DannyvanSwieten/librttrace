@@ -31,7 +31,7 @@ Result<Void> VulkanCommandBuffer::build_top_level_acceleration_structure(TopLeve
 	return Result<Void>::from_error("Not implemented");
 }
 
-Result<Void> VulkanCommandBuffer::trace_rays(ResourceContext* resource_ctx, uint32_t x, uint32_t y)
+Result<Void> VulkanCommandBuffer::trace_rays(const Pipeline* pipeline, ResourceContext* resource_ctx, uint32_t x, uint32_t y)
 {
 	return Result<Void>::from_error("Not implemented");
 }

@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.2)
 
 set(CMAKE_CXX_STANDARD 20)
 project(LibRtRender VERSION 0.1.0 LANGUAGES CXX)
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 find_package(Vulkan REQUIRED)
 
@@ -46,6 +47,8 @@ add_library(rtintersect STATIC
     lib/ray_generation_program.cpp
     lib/compiler/instructions.hpp
     lib/compiler/instructions.cpp
+    lib/shader_compiler.hpp
+    lib/shader_compiler.cpp
 
     lib/cpu/device.hpp
     lib/cpu/device.cpp
@@ -63,8 +66,25 @@ add_library(rtintersect STATIC
     lib/cpu/command_buffer.cpp
     lib/cpu/intersect.hpp
     lib/cpu/intersect.cpp
+    lib/cpu/ray_generation_program.hpp
+    lib/cpu/ray_generation_program.cpp
     lib/cpu/vm.hpp
     lib/cpu/vm.cpp
+    lib/shader_graph/shader_graph.hpp
+    lib/shader_graph/shader_graph.cpp
+    lib/shader_graph/context.hpp
+    lib/shader_graph/context.cpp
+    lib/shader_graph/node/node.hpp
+    lib/shader_graph/node/node.cpp
+    lib/shader_graph/node/constant.hpp
+    lib/shader_graph/node/constant.cpp
+    lib/shader_graph/node/binary_operator.hpp
+    lib/shader_graph/node/outputs.hpp
+    lib/shader_graph/node/outputs.cpp
+    lib/shader_graph/node/inputs.hpp
+    lib/shader_graph/node/inputs.cpp
+    lib/shader_graph/node/normalize.hpp
+    lib/shader_graph/node/normalize.cpp
 
     lib/vulkan/device.hpp
     lib/vulkan/device.cpp

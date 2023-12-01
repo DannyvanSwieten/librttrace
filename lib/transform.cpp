@@ -10,18 +10,18 @@ Transform::Transform(const Float3& translation, const Float3& rotation, const Fl
 InstanceTransform Transform::get_instance_transform() const
 {
 	InstanceTransform instance_transform;
-	instance_transform.transform[0] = m_scale.x * m_rotation.x;
-	instance_transform.transform[1] = m_scale.x * m_rotation.y;
-	instance_transform.transform[2] = m_scale.x * m_rotation.z;
-	instance_transform.transform[3] = m_translation.x;
-	instance_transform.transform[4] = m_scale.y * m_rotation.x;
-	instance_transform.transform[5] = m_scale.y * m_rotation.y;
-	instance_transform.transform[6] = m_scale.y * m_rotation.z;
-	instance_transform.transform[7] = m_translation.y;
-	instance_transform.transform[8] = m_scale.z * m_rotation.x;
-	instance_transform.transform[9] = m_scale.z * m_rotation.y;
-	instance_transform.transform[10] = m_scale.z * m_rotation.z;
-	instance_transform.transform[11] = m_translation.z;
+	instance_transform.transform[0] = m_scale[0] * m_rotation[0];
+	instance_transform.transform[1] = m_scale[0] * m_rotation[1];
+	instance_transform.transform[2] = m_scale[0] * m_rotation[2];
+	instance_transform.transform[3] = m_translation[0];
+	instance_transform.transform[4] = m_scale[1] * m_rotation[0];
+	instance_transform.transform[5] = m_scale[1] * m_rotation[1];
+	instance_transform.transform[6] = m_scale[1] * m_rotation[2];
+	instance_transform.transform[7] = m_translation[1];
+	instance_transform.transform[8] = m_scale[2] * m_rotation[0];
+	instance_transform.transform[9] = m_scale[2] * m_rotation[1];
+	instance_transform.transform[10] = m_scale[2] * m_rotation[2];
+	instance_transform.transform[11] = m_translation[2];
 	return instance_transform;
 }
 
