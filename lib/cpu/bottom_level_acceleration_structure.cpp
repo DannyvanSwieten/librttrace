@@ -231,12 +231,17 @@ CpuBottomLevelAccelerationStructure::Split CpuBottomLevelAccelerationStructure::
 	return Split{ best_axis, best_position, best_cost };
 }
 
-void CpuBottomLevelAccelerationStructure::intersect(const Float3& origin, const Float3& dir, float t_min, HitRecord& record) const
+void CpuBottomLevelAccelerationStructure::intersect(const Mat4x4& transform, const Float3& origin, const Float3& dir, float t_min, HitRecord& record) const
 {
 	// Intersect bvh
 	std::array<uint32_t, 32> stack;
 	uint32_t node_index = 0;
 	uint32_t stack_ptr = 0;
+
+	if (!intersect_bounding_box(origin, dir, m_bounding_box.transformed(transform), t_min, record.t))
+	{
+		return;
+	}
 
 	while (true)
 	{
@@ -255,7 +260,7 @@ void CpuBottomLevelAccelerationStructure::intersect(const Float3& origin, const 
 				float t, u, v;
 				if (intersect_muller_trumbore(origin, dir, v0, v1, v2, t, u, v))
 				{
-					if (t > t_min && t < record.t)
+					if (t > 0.01 && t < record.t)
 					{
 						record.t = t;
 						record.u = u;
@@ -318,13 +323,9 @@ void CpuBottomLevelAccelerationStructure::intersect(const Float3& origin, const 
 	}
 }
 
-Instance CpuBottomLevelAccelerationStructure::create_instance(uint32_t instance_id, InstanceMask mask, const float* transform)
+Instance CpuBottomLevelAccelerationStructure::create_instance(uint32_t instance_id, InstanceMask mask, const Mat4x4& transform)
 {
-	Instance result{ this, instance_id, mask };
-	if (transform)
-		std::memcpy(result.transform, transform, sizeof(result.transform));
-
-	return result;
+	return { m_index_buffer, { m_vertex_buffer, nullptr, nullptr, nullptr }, this, instance_id, mask, transform };
 }
 
 const BoundingBox& CpuBottomLevelAccelerationStructure::bounding_box() const

@@ -1,7 +1,8 @@
 #include "instructions.hpp"
+#include "../cpu/vm.hpp"
 #include <array>
 #include <cassert>
-Float3 get_value(const Value& value, const std::array<Float3, 16>& registers, const std::array<Value, 4>& globals)
+Float3 get_value(const Value& value, const std::array<Float3, 1024>& registers, vm::globals::Globals& globals)
 {
 	return std::visit(
 		[&](auto&& arg) -> Float3 {
@@ -36,6 +37,7 @@ Float3 get_value(const Constant& value)
 			{
 				return Float3(static_cast<float>(arg));
 			}
+
 			else if constexpr (std::is_same_v<T, float>)
 			{
 				return Float3(arg);

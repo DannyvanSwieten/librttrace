@@ -9,6 +9,11 @@ struct HitRecord
 	float v = 0;
 	uint32_t instance_id = -1;
 	uint32_t primitive_id = -1;
+
+	bool is_hit() const
+	{
+		return instance_id != -1;
+	}
 };
 
 bool intersect_muller_trumbore(

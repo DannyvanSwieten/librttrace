@@ -4,11 +4,15 @@
 #include <vector>
 #include "../compiler/instructions.hpp"
 #include "context.hpp"
+
 namespace shadergraph {
 	class Node;
 	class ShaderGraph
 	{
 	public:
+		ShaderGraph() = default;
+		ShaderGraph(size_t next_free_register);
+		ShaderGraph(ShaderGraph&& other);
 		~ShaderGraph();
 		struct Connection
 		{
@@ -27,6 +31,31 @@ namespace shadergraph {
 		void set_default_value(size_t node_id, size_t output_id, const Value& value);
 
 		instructions::ShaderProgram generate_ir();
+
+		size_t next_free_register() const
+		{
+			return m_compiler_ctx.m_next_free_register;
+		}
+
+		Value get_output_value_for_connection(const Connection& connection) const
+		{
+			const auto& io_ctx = m_io_contexts.at(connection.from_node);
+			return io_ctx.output(connection.from_output).dst;
+		}
+
+		std::vector<Connection> get_every_node_connected_from(size_t output_node_id) const
+		{
+			std::vector<Connection> connections;
+			for (const auto& connection : m_connections)
+			{
+				if (connection.from_node == output_node_id)
+				{
+					connections.push_back(connection);
+				}
+			}
+
+			return connections;
+		}
 
 	private:
 		void topological_sort();

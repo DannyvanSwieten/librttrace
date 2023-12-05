@@ -11,9 +11,9 @@ class CpuBottomLevelAccelerationStructure : public BottomLevelAccelerationStruct
 public:
 	CpuBottomLevelAccelerationStructure(const CpuVertexBuffer* const vertex_buffer, size_t vertex_stride, const CpuIndexBuffer* const index_buffer);
 	void build(const CpuVertexBuffer& vertex_buffer, size_t vertex_stride, const CpuIndexBuffer& index_buffer);
-	void intersect(const Float3& origin, const Float3& dir, float t_min, HitRecord& record) const;
+	void intersect(const Mat4x4& transform, const Float3& origin, const Float3& dir, float t_min, HitRecord& record) const;
 
-	Instance create_instance(uint32_t instance_id, InstanceMask mask, const float* transform) override;
+	Instance create_instance(uint32_t instance_id, InstanceMask mask, const Mat4x4& transform) override;
 
 	const BoundingBox& bounding_box() const;
 

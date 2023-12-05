@@ -10,6 +10,16 @@ FrameBuffer* ResourceContext::get_frame_buffer(size_t id)
 	return m_frame_buffers[id];
 }
 
+void ResourceContext::add_vertex_buffer(const VertexBuffer* vertex_buffer)
+{
+	m_vertex_buffers.emplace_back(vertex_buffer);
+}
+
+const VertexBuffer* ResourceContext::get_vertex_buffer(size_t index) const
+{
+	return m_vertex_buffers[index];
+}
+
 void ResourceContext::add_acceleration_structure(size_t id, const TopLevelAccelerationStructure* const acceleration_structure)
 {
 	m_acceleration_structures[id] = acceleration_structure;

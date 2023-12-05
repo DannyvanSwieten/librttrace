@@ -14,6 +14,8 @@ public:
 
 	HitRecord intersect(const Float3& origin, const Float3& direction) const;
 
+	const Instance& instance(size_t index) const;
+
 private:
 	std::vector<Instance> m_instances;
 	BoundingBox m_bounding_box;

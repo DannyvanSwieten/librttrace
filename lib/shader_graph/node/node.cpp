@@ -1,3 +1,6 @@
 #include "node.hpp"
 
-namespace shadergraph {}   // namespace shadergraph
+namespace shadergraph {
+	Node::~Node()
+	{}
+}   // namespace shadergraph

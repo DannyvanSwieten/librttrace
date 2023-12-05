@@ -47,7 +47,7 @@ Result<Void> CpuCommandBuffer::trace_rays(const Pipeline* pipeline, ResourceCont
 		const auto start_row = warp * rows_per_warp;
 		const auto end_row = start_row + rows_per_warp;
 		jobs.emplace_back([&, start_row, end_row] {
-			std::array<Value, 4> globals;
+			vm::globals::Globals globals;
 			VirtualMachine vm;
 			for (uint32_t j = start_row; j < end_row; j++)
 			{
@@ -55,25 +55,14 @@ Result<Void> CpuCommandBuffer::trace_rays(const Pipeline* pipeline, ResourceCont
 					return;
 				for (uint32_t i = 0; i < x; i++)
 				{
-					const auto& registers = vm.execute(cpu_ray_generation_program->program(), globals, i, y - j, x, y);
-					const auto& ray_origin = registers[0];
-					const auto ray_direction = registers[1];
-					for (const auto& acceleration_structure : resource_ctx->acceleration_structures())
-					{
-						const auto cpu_top_level_acceleration_structure = static_cast<const CpuTopLevelAccelerationStructure* const>(acceleration_structure);
-						const auto record = cpu_top_level_acceleration_structure->intersect(ray_origin, ray_direction);
-						if (record.primitive_id != -1)
-						{
-							fb->set_pixel(i, j, record.u, record.v, 1.0f - record.u - record.v, 1.0f);
-						}
-					}
+					vm.execute(pipeline, resource_ctx, globals, i, y - 1 - j, x, y);
 				}
 			}
 		});
 	}
 
 	std::vector<std::thread> threads;
-	for (uint32_t t = 0; t < std::thread::hardware_concurrency(); t++)
+	for (uint32_t t = 0; t < 1; t++)
 	{
 		threads.emplace_back(std::thread([&] {
 			while (counter < jobs.size())

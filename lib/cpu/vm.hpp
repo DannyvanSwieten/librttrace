@@ -1,22 +1,42 @@
 #pragma once
 #include <array>
-#include <map>
 #include "../compiler/instructions.hpp"
 
-namespace vm::globals {
-	static constexpr Global THREAD_ID{ 0 };
-	static constexpr Global THREAD_COUNT{ 1 };
-	static constexpr Global RAY_ORIGIN{ 2 };
-	static constexpr Global RAY_DIRECTION{ 3 };
-
-}   // namespace vm::globals
-
+#include "globals.hpp"
+class ResourceContext;
+class Pipeline;
 class VirtualMachine
 {
 public:
-	const std::array<Float3, 16>& execute(
-		const instructions::ShaderProgram& program, std::array<Value, 4>& globals, int thread_id_x, int thread_id_y, int thread_count_x, int thread_count_y);
+	void execute(const Pipeline* pipeline,
+	             ResourceContext* ctx,
+	             vm::globals::Globals& globals,
+	             int thread_id_x,
+	             int thread_id_y,
+	             int thread_count_x,
+	             int thread_count_y);
+	void execute(const instructions::ShaderProgram& program,
+	             const Pipeline* pipeline,
+	             ResourceContext* ctx,
+	             vm::globals::Globals& globals,
+	             int thread_id_x,
+	             int thread_id_y,
+	             int thread_count_x,
+	             int thread_count_y);
+
+	template <typename T>
+	void execute(const T* const stage,
+	             const Pipeline* pipeline,
+	             ResourceContext* ctx,
+	             vm::globals::Globals& globals,
+	             int thread_id_x,
+	             int thread_id_y,
+	             int thread_count_x,
+	             int thread_count_y)
+	{
+		execute(stage->program(), pipeline, ctx, globals, thread_id_x, thread_id_y, thread_count_x, thread_count_y);
+	}
 
 private:
-	std::array<Float3, 16> registers;
+	std::array<Float3, 1024> registers;
 };

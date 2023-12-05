@@ -6,7 +6,7 @@ CpuTopLevelAccelerationStructure::CpuTopLevelAccelerationStructure(const Instanc
 	for (size_t i = 0; i < count; ++i)
 	{
 		const auto& instance = instances[i];
-		const auto cpu_acceleration_structure = static_cast<const CpuBottomLevelAccelerationStructure* const>(instance.acceleration_structure);
+		const auto cpu_acceleration_structure = static_cast<const CpuBottomLevelAccelerationStructure* const>(instance.m_acceleration_structure);
 		m_bounding_box.grow(cpu_acceleration_structure->bounding_box());
 		m_instances.push_back(instances[i]);
 	}
@@ -24,11 +24,27 @@ HitRecord CpuTopLevelAccelerationStructure::intersect(const Float3& origin, cons
 		return record;
 	}
 
+	float t = std::numeric_limits<float>::max();
+
 	for (const auto& instance : m_instances)
 	{
-		const auto cpu_acceleration_structure = static_cast<const CpuBottomLevelAccelerationStructure* const>(instance.acceleration_structure);
-		cpu_acceleration_structure->intersect(origin, direction, 0.01f, record);
+		const auto inverse_transform = glm::inverse(instance.m_transform);
+		const auto inverse_origin = inverse_transform * glm::vec4(origin, 1.0);
+		const auto inverse_direction = normalize(inverse_transform * glm::vec4(direction, 0.0));
+
+		const auto cpu_acceleration_structure = static_cast<const CpuBottomLevelAccelerationStructure* const>(instance.m_acceleration_structure);
+		cpu_acceleration_structure->intersect(instance.m_transform, inverse_origin, inverse_direction, 0.01f, record);
+		if (record.t < t)
+		{
+			t = record.t;
+			record.instance_id = instance.m_instance_id;
+		}
 	}
 
 	return record;
+}
+
+const Instance& CpuTopLevelAccelerationStructure::instance(size_t index) const
+{
+	return m_instances[index];
 }

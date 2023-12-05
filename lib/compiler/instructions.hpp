@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <string_view>
+#include "../cpu/globals.hpp"
 #include "../float3.hpp"
 
 struct Register
@@ -10,15 +11,10 @@ struct Register
 	uint32_t index;
 };
 
-struct Global
-{
-	size_t name;
-};
-
 using Constant = std::variant<int, float, Float3>;
 using Value = std::variant<Constant, Register, Global>;
 
-Float3 get_value(const Value& value, const std::array<Float3, 16>& registers, const std::array<Value, 4>& globals);
+Float3 get_value(const Value& value, const std::array<Float3, 1024>& registers, vm::globals::Globals& globals);
 Float3 get_value(const Constant& constant);
 
 namespace instructions {
@@ -41,6 +37,18 @@ namespace instructions {
 	};
 
 	struct Div
+	{
+		Value a;
+		Value b;
+	};
+
+	struct Dot
+	{
+		Value a;
+		Value b;
+	};
+
+	struct Cross
 	{
 		Value a;
 		Value b;
@@ -73,6 +81,26 @@ namespace instructions {
 	struct Normalize
 	{
 		Value src;
+	};
+
+	struct Intersect
+	{
+		Value origin;
+		Value direction;
+		Value acc_index;
+	};
+
+	struct StorePixel
+	{
+		Value image_index;
+		Value location;
+		Value color;
+	};
+
+	struct LoadAttribute
+	{
+		Value buffer_index;
+		Value vertex_index;
 	};
 
 	// struct Jump
@@ -218,7 +246,7 @@ namespace instructions {
 	// 	Value a;
 	// };
 
-	using OpCode = std::variant<Add, Sub, Mul, Div, Neg, Load, Store, Call, Return, Normalize
+	using OpCode = std::variant<Add, Sub, Mul, Div, Dot, Cross, Neg, Load, LoadAttribute, Store, StorePixel, Call, Return, Normalize, Intersect
 	                            // Jump,
 	                            // JumpIf,
 	                            // JumpIfNot,

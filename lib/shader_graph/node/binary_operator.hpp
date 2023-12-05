@@ -16,7 +16,7 @@ namespace shadergraph {
 		void output_instruction(CompilerContext& ctx, IOContext& io_ctx) override
 		{
 			auto output = T{ io_ctx.input_value(m_lhs_input_index), io_ctx.input_value(m_rhs_input_index) };
-			io_ctx.set_instruction(m_output_index, output);
+			io_ctx.set_instruction(m_output_index, output, ctx);
 		}
 
 	private:

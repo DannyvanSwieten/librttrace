@@ -16,4 +16,5 @@ struct BoundingBox
 	Float3 size() const;
 	float area() const;
 	float volume() const;
+	BoundingBox transformed(const Mat4x4& transform) const;
 };

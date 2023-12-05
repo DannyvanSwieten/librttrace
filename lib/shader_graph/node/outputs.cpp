@@ -10,7 +10,7 @@ namespace shadergraph {
 	void RayOriginOutput::output_instruction(CompilerContext& ctx, IOContext& io_ctx)
 	{
 		auto output = instructions::Store{ io_ctx.input_value(m_input_index), Register{ 0 } };
-		io_ctx.set_instruction(m_output_index, output);
+		io_ctx.set_instruction(m_output_index, output, ctx);
 	}
 	void RayDirectionOutput::add_io(IOContext& io_ctx)
 	{
@@ -20,6 +20,6 @@ namespace shadergraph {
 	void RayDirectionOutput::output_instruction(CompilerContext& ctx, IOContext& io_ctx)
 	{
 		auto output = instructions::Store{ io_ctx.input_value(m_input_index), Register{ 1 } };
-		io_ctx.set_instruction(m_output_index, output);
+		io_ctx.set_instruction(m_output_index, output, ctx);
 	}
 }   // namespace shadergraph

@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.2)
 
 set(CMAKE_CXX_STANDARD 20)
 project(LibRtRender VERSION 0.1.0 LANGUAGES CXX)
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 find_package(Vulkan REQUIRED)
 
@@ -45,6 +44,8 @@ add_library(rtintersect STATIC
     lib/pipeline.cpp
     lib/ray_generation_program.hpp
     lib/ray_generation_program.cpp
+    lib/closest_hit_program.hpp
+    lib/closest_hit_program.cpp
     lib/compiler/instructions.hpp
     lib/compiler/instructions.cpp
     lib/shader_compiler.hpp
@@ -68,6 +69,8 @@ add_library(rtintersect STATIC
     lib/cpu/intersect.cpp
     lib/cpu/ray_generation_program.hpp
     lib/cpu/ray_generation_program.cpp
+    lib/cpu/closest_hit_program.hpp
+    lib/cpu/closest_hit_program.cpp
     lib/cpu/vm.hpp
     lib/cpu/vm.cpp
     lib/shader_graph/shader_graph.hpp
@@ -85,6 +88,12 @@ add_library(rtintersect STATIC
     lib/shader_graph/node/inputs.cpp
     lib/shader_graph/node/normalize.hpp
     lib/shader_graph/node/normalize.cpp
+    lib/shader_graph/node/intersect.hpp
+    lib/shader_graph/node/intersect.cpp
+    lib/shader_graph/node/store_pixel.hpp
+    lib/shader_graph/node/store_pixel.cpp
+    lib/shader_graph/node/fetch_primitive.hpp
+    lib/shader_graph/node/fetch_primitive.cpp
 
     lib/vulkan/device.hpp
     lib/vulkan/device.cpp
@@ -102,10 +111,10 @@ add_library(rtintersect STATIC
 
 set_target_properties(rtintersect PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(rtintersect Vulkan::Vulkan)
-target_compile_options(rtintersect PRIVATE /fp:fast)
 
 # Create executable target
 add_executable(RtTrace
+    src/ray_generation.cpp
     src/main.cpp
 )
 
