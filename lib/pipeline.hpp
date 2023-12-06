@@ -1,5 +1,5 @@
 #pragma once
-
+#include <cstddef>
 class RayGenerationProgram;
 class ClosestHitProgram;
 class MissProgram;

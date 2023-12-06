@@ -11,8 +11,8 @@ VulkanBottomLevelAccelerationStructure::VulkanBottomLevelAccelerationStructure(D
 {
 	auto& vulkan_device = static_cast<VulkanDevice&>(device);
 	auto vk_device = vulkan_device.device();
-	const auto vk_vertex_buffer = static_cast<const VulkanVertexBuffer& const>(*vertex_buffer);
-	const auto vk_index_buffer = static_cast<const VulkanIndexBuffer& const>(*index_buffer);
+	const auto vk_vertex_buffer = static_cast<const VulkanVertexBuffer&>(*vertex_buffer);
+	const auto vk_index_buffer = static_cast<const VulkanIndexBuffer&>(*index_buffer);
 
 	VkAccelerationStructureGeometryTrianglesDataKHR triangles_data = {};
 	triangles_data.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR;

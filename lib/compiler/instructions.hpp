@@ -246,7 +246,7 @@ namespace instructions {
 	// 	Value a;
 	// };
 
-	using OpCode = std::variant<Add, Sub, Mul, Div, Dot, Cross, Neg, Load, LoadAttribute, Store, StorePixel, Call, Return, Normalize, Intersect
+	using OpCode = std::variant<Add, Sub, Mul, Div, Dot, Cross, Neg, Load, LoadAttribute, Store, StorePixel, Normalize, Intersect
 	                            // Jump,
 	                            // JumpIf,
 	                            // JumpIfNot,

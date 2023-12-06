@@ -22,10 +22,6 @@ add_library(rtintersect STATIC
     lib/result.hpp
     lib/float3.hpp
     lib/float3.cpp
-    lib/transform.hpp
-    lib/transform.cpp
-    lib/quaternion.hpp
-    lib/quaternion.cpp
     lib/bounding_box.hpp
     lib/bounding_box.cpp
     lib/bottom_level_acceleration_structure.hpp
@@ -110,6 +106,7 @@ add_library(rtintersect STATIC
 )
 
 set_target_properties(rtintersect PROPERTIES LINKER_LANGUAGE CXX)
+include_directories(rtintersect PUBLIC dependencies)
 target_link_libraries(rtintersect Vulkan::Vulkan)
 
 # Create executable target

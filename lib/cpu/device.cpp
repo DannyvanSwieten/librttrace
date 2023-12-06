@@ -6,7 +6,8 @@
 #include "command_buffer.hpp"
 #include "top_level_acceleration_structure.hpp"
 #include <limits.h>
-#include <intrin.h>
+#ifdef WIN32
+	#include <intrin.h>
 
 struct CPUID
 {
@@ -25,15 +26,18 @@ struct CPUID
 	int ECX;
 	int EDX;
 };
+#endif
 
 CpuDevice::CpuDevice()
 {
+#ifdef WIN32
 	CPUID cpu_id(0, 0);
 	std::string vendor_id;
 	vendor_id += std::string((const char*)&cpu_id.EBX, 4);
 	vendor_id += std::string((const char*)&cpu_id.EDX, 4);
 	vendor_id += std::string((const char*)&cpu_id.ECX, 4);
 	m_vendor_id = vendor_id;
+#endif
 }
 
 Result<VertexBuffer*> CpuDevice::alloc_vertex_buffer(const float* const data, size_t size)

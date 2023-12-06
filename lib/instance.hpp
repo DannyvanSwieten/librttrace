@@ -15,7 +15,7 @@ enum class InstanceMask
 struct Instance
 {
 	const IndexBuffer* m_index_buffer;
-	const std::array<const VertexBuffer*, 4> m_attribute_buffers;
+	std::array<const VertexBuffer*, 4> m_attribute_buffers;
 	BottomLevelAccelerationStructure* m_acceleration_structure;
 	uint32_t m_instance_id;
 	InstanceMask m_mask;

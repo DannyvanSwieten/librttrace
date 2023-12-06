@@ -62,7 +62,7 @@ Result<Void> CpuCommandBuffer::trace_rays(const Pipeline* pipeline, ResourceCont
 	}
 
 	std::vector<std::thread> threads;
-	for (uint32_t t = 0; t < 1; t++)
+	for (uint32_t t = 0; t < std::thread::hardware_concurrency(); t++)
 	{
 		threads.emplace_back(std::thread([&] {
 			while (counter < jobs.size())
