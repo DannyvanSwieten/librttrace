@@ -106,7 +106,7 @@ add_library(rtintersect STATIC
 )
 
 set_target_properties(rtintersect PROPERTIES LINKER_LANGUAGE CXX)
-include_directories(rtintersect PUBLIC dependencies)
+include_directories(rtintersect PUBLIC dependencies/glm dependencies)
 target_link_libraries(rtintersect Vulkan::Vulkan)
 
 # Create executable target
