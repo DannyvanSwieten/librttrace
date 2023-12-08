@@ -42,10 +42,10 @@ add_library(rtintersect STATIC
     lib/ray_generation_program.cpp
     lib/closest_hit_program.hpp
     lib/closest_hit_program.cpp
-    lib/compiler/instructions.hpp
-    lib/compiler/instructions.cpp
     lib/shader_compiler.hpp
     lib/shader_compiler.cpp
+    lib/miss_program.hpp
+    lib/miss_program.cpp
 
     lib/cpu/device.hpp
     lib/cpu/device.cpp
@@ -67,12 +67,19 @@ add_library(rtintersect STATIC
     lib/cpu/ray_generation_program.cpp
     lib/cpu/closest_hit_program.hpp
     lib/cpu/closest_hit_program.cpp
-    lib/cpu/vm.hpp
-    lib/cpu/vm.cpp
+    lib/cpu/miss_program.hpp
+    lib/cpu/miss_program.cpp
+
+    lib/cpu/virtual_machine/vm.hpp
+    lib/cpu/virtual_machine/vm.cpp
+    lib/cpu/virtual_machine/shader_program.hpp
+
     lib/shader_graph/shader_graph.hpp
     lib/shader_graph/shader_graph.cpp
     lib/shader_graph/context.hpp
     lib/shader_graph/context.cpp
+    lib/shader_graph/value.hpp
+    lib/shader_graph/value.cpp
     lib/shader_graph/node/node.hpp
     lib/shader_graph/node/node.cpp
     lib/shader_graph/node/constant.hpp
@@ -90,6 +97,9 @@ add_library(rtintersect STATIC
     lib/shader_graph/node/store_pixel.cpp
     lib/shader_graph/node/fetch_primitive.hpp
     lib/shader_graph/node/fetch_primitive.cpp
+    lib/shader_graph/node/mix.hpp
+    lib/shader_graph/node/mix.cpp
+    lib/shader_graph/instructions.hpp
 
     lib/vulkan/device.hpp
     lib/vulkan/device.cpp
@@ -111,7 +121,7 @@ target_link_libraries(rtintersect Vulkan::Vulkan)
 
 # Create executable target
 add_executable(RtTrace
-    src/ray_generation.cpp
+    src/shaders.cpp
     src/main.cpp
 )
 

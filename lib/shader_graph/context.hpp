@@ -1,6 +1,6 @@
 #pragma once
 #include <map>
-#include "../compiler/instructions.hpp"
+#include "instructions.hpp"
 namespace shadergraph {
 	class CompilerContext
 	{
@@ -17,25 +17,25 @@ namespace shadergraph {
 
 	struct Input
 	{
-		Value value;
+		Operand Operand;
 	};
 
 	struct Output
 	{
-		instructions::Instruction instruction;
+		Instruction instruction;
 	};
 
 	class IOContext
 	{
 	public:
-		size_t add_input(const PortDescription& description, const Value& default_value);
+		size_t add_input(const PortDescription& description, const Operand& default_Operand);
 		size_t add_output(const PortDescription& output_description);
 
-		const Value& input_value(size_t index) const;
-		const instructions::Instruction& output(size_t index) const;
+		const Operand& input_value(size_t index) const;
+		const Instruction& output(size_t index) const;
 
-		void set_input_value(size_t index, const Value& value);
-		void set_instruction(size_t index, const instructions::OpCode& op_code, CompilerContext& compiler_ctx);
+		void set_input_value(size_t index, const Operand& Operand);
+		void set_instruction(size_t index, const OpCode& op_code, CompilerContext& compiler_ctx);
 
 		const PortDescription& input_description(size_t index) const;
 		const PortDescription& output_description(size_t index) const;

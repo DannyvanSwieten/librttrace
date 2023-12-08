@@ -23,6 +23,11 @@ public:
 		return m_closest_hit_program;
 	}
 
+	const MissProgram* miss_program() const
+	{
+		return m_miss_program;
+	}
+
 private:
 	const RayGenerationProgram* m_ray_generation_program;
 	const ClosestHitProgram* m_closest_hit_program;

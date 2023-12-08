@@ -1,7 +1,7 @@
 #pragma once
 #include "../context.hpp"
-#include "../../compiler/instructions.hpp"
-#include "../../cpu/vm.hpp"
+#include "../../shader_graph/instructions.hpp"
+#include "../../cpu/virtual_machine/vm.hpp"
 namespace shadergraph {
 	class CompilerContext;
 	class IOContext;

@@ -1,18 +1,18 @@
 #pragma once
 #include <array>
 #include "../ray_generation_program.hpp"
-#include "vm.hpp"
+#include "virtual_machine/shader_program.hpp"
 
 class CpuRayGenerationProgram : public RayGenerationProgram
 {
 public:
-	CpuRayGenerationProgram(const instructions::ShaderProgram& program);
+	CpuRayGenerationProgram(const ShaderProgram& program);
 
-	const instructions::ShaderProgram& program() const
+	const ShaderProgram& program() const
 	{
 		return m_program;
 	}
 
 private:
-	instructions::ShaderProgram m_program;
+	ShaderProgram m_program;
 };

@@ -3,11 +3,6 @@
 #include "node/node.hpp"
 #include <queue>
 namespace shadergraph {
-	ShaderGraph::ShaderGraph(size_t next_free_register)
-	{
-		m_compiler_ctx.m_next_free_register = next_free_register;
-	}
-
 	ShaderGraph::ShaderGraph(ShaderGraph&& other)
 	{
 		this->m_compiler_ctx = std::move(other.m_compiler_ctx);
@@ -45,15 +40,15 @@ namespace shadergraph {
 		}
 	}
 
-	void ShaderGraph::set_default_value(size_t node_id, size_t output_id, const Value& value)
+	void ShaderGraph::set_default_value(size_t node_id, size_t output_id, const Operand& value)
 	{
 		auto& io_ctx = m_io_contexts.at(node_id);
 		io_ctx.set_input_value(output_id, value);
 	}
 
-	instructions::ShaderProgram ShaderGraph::generate_ir()
+	std::vector<Instruction> ShaderGraph::generate_ir()
 	{
-		instructions::ShaderProgram program;
+		std::vector<Instruction> program;
 		for (const auto& node_id : m_sorted_nodes)
 		{
 			auto& node = m_nodes.at(node_id);
@@ -68,7 +63,7 @@ namespace shadergraph {
 			}
 
 			for (const auto& [id, output] : io_ctx.output_values())
-				program.add_instruction(output.instruction);
+				program.emplace_back(output.instruction);
 		}
 
 		return program;

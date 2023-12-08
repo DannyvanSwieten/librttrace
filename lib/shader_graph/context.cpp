@@ -5,11 +5,11 @@ namespace shadergraph {
 	{
 		return m_next_free_register++;
 	}
-	size_t IOContext::add_input(const PortDescription& description, const Value& default_value)
+	size_t IOContext::add_input(const PortDescription& description, const Operand& default_Operand)
 	{
 		size_t index = m_input_id++;
 		m_input_descriptions.emplace(index, description);
-		m_input_value.emplace(index, Input{ default_value });
+		m_input_value.emplace(index, Input{ default_Operand });
 		return index;
 	}
 	size_t IOContext::add_output(const PortDescription& output_description)
@@ -19,17 +19,17 @@ namespace shadergraph {
 		m_output_value.emplace(index, Output{});
 		return index;
 	}
-	const Value& IOContext::input_value(size_t index) const
+	const Operand& IOContext::input_value(size_t index) const
 	{
 		auto it = m_input_value.find(index);
 		if (it != m_input_value.end())
 		{
-			return it->second.value;
+			return it->second.Operand;
 		}
 		assert(false);
 		return {};
 	}
-	const instructions::Instruction& IOContext::output(size_t index) const
+	const Instruction& IOContext::output(size_t index) const
 	{
 		auto it = m_output_value.find(index);
 		if (it != m_output_value.end())
@@ -39,21 +39,21 @@ namespace shadergraph {
 		assert(false);
 		return {};
 	}
-	void IOContext::set_input_value(size_t index, const Value& value)
+	void IOContext::set_input_value(size_t index, const Operand& Operand)
 	{
 		auto it = m_input_value.find(index);
 		if (it != m_input_value.end())
 		{
-			it->second.value = value;
+			it->second.Operand = Operand;
 		}
 		else
 		{
 			assert(false);
 		}
 	}
-	void IOContext::set_instruction(size_t index, const instructions::OpCode& op_code, CompilerContext& compiler_ctx)
+	void IOContext::set_instruction(size_t index, const OpCode& op_code, CompilerContext& compiler_ctx)
 	{
-		const auto instruction = instructions::Instruction{ op_code, Register{ compiler_ctx.next_free_register() } };
+		const auto instruction = Instruction{ op_code, Register{ compiler_ctx.next_free_register() } };
 		auto it = m_output_value.find(index);
 		if (it != m_output_value.end())
 		{

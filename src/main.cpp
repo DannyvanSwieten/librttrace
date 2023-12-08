@@ -4,11 +4,11 @@
 #include "bottom_level_acceleration_structure.hpp"
 #include "resource_ctx.hpp"
 #include "image.hpp"
-#include "cpu/vm.hpp"
+#include <cpu/virtual_machine/vm.hpp>
 
 #include "shader_compiler.hpp"
 
-#include "ray_generation.hpp"
+#include "shaders.hpp"
 
 #include "pipeline.hpp"
 
@@ -47,13 +47,21 @@ int main()
 
 	auto ray_gen_graph = create_ray_gen_program();
 	const auto ir = ray_gen_graph.generate_ir();
-	auto closest_hit_graph = create_closest_hit_program(ray_gen_graph.next_free_register() - 1);
+	auto closest_hit_graph = create_closest_hit_program();
 	const auto ir2 = closest_hit_graph.generate_ir();
 	ShaderCompiler compiler(api);
 	auto ray_gen = compiler.compile_ray_generation_program(ir).expect("Failed to compile ray generation program");
 	auto closest_hit = compiler.compile_closest_hit_program(ir2).expect("Failed to compile closest hit program");
 
-	Pipeline pipeline(ray_gen, closest_hit, nullptr, nullptr, 0);
+	auto miss_graph = create_miss_program();
+	const auto ir3 = miss_graph.generate_ir();
+	auto miss = compiler.compile_miss_program(ir3).expect("Failed to compile miss program");
+
+	auto circle_graph = create_circle_program();
+	const auto ir4 = circle_graph.generate_ir();
+	auto circle = compiler.compile_ray_generation_program(ir4).expect("Failed to compile circle program");
+
+	Pipeline pipeline(circle, closest_hit, miss, nullptr, 0);
 
 	ResourceContext resource_ctx;
 	resource_ctx.add_frame_buffer(0, frame_buffer);

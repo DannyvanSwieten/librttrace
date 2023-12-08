@@ -4,7 +4,7 @@ namespace shadergraph {
 	void NormalizeNode::output_instruction(CompilerContext& ctx, IOContext& io_ctx)
 	{
 		auto input = io_ctx.input_value(m_input_index);
-		auto output = instructions::Normalize{ input };
+		auto output = Normalize{ input };
 		io_ctx.set_instruction(m_output_index, output, ctx);
 	}
 

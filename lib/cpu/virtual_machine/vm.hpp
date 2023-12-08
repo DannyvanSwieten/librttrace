@@ -1,24 +1,22 @@
 #pragma once
 #include <array>
-#include "../compiler/instructions.hpp"
+#include "../../shader_graph/registers.hpp"
+#include "../../shader_graph/instructions.hpp"
+#include "../../shader_graph/globals.hpp"
+#include "shader_program.hpp"
 
-#include "globals.hpp"
 class ResourceContext;
 class Pipeline;
+
 class VirtualMachine
 {
 public:
-	void execute(const Pipeline* pipeline,
-	             ResourceContext* ctx,
-	             vm::globals::Globals& globals,
-	             int thread_id_x,
-	             int thread_id_y,
-	             int thread_count_x,
-	             int thread_count_y);
-	void execute(const instructions::ShaderProgram& program,
+	void execute(
+		const Pipeline* pipeline, ResourceContext* ctx, globals::Globals& globals, int thread_id_x, int thread_id_y, int thread_count_x, int thread_count_y);
+	void execute(const ShaderProgram& program,
 	             const Pipeline* pipeline,
 	             ResourceContext* ctx,
-	             vm::globals::Globals& globals,
+	             globals::Globals& globals,
 	             int thread_id_x,
 	             int thread_id_y,
 	             int thread_count_x,
@@ -28,7 +26,7 @@ public:
 	void execute(const T* const stage,
 	             const Pipeline* pipeline,
 	             ResourceContext* ctx,
-	             vm::globals::Globals& globals,
+	             globals::Globals& globals,
 	             int thread_id_x,
 	             int thread_id_y,
 	             int thread_count_x,
@@ -38,5 +36,8 @@ public:
 	}
 
 private:
-	std::array<Float3, 1024> registers;
+	Registers registers;
+	size_t m_pc = 0;
+	std::array<Registers, 3> m_stack;
+	size_t m_stack_pointer = 0;
 };

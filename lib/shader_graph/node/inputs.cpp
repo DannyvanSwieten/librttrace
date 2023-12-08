@@ -2,7 +2,7 @@
 namespace shadergraph {
 	void ThreadIdInput::output_instruction(CompilerContext& ctx, IOContext& io_ctx)
 	{
-		io_ctx.set_instruction(m_output_index, instructions::Load{ vm::globals::THREAD_ID }, ctx);
+		io_ctx.set_instruction(m_output_index, Load{ globals::THREAD_ID }, ctx);
 	}
 
 	void ThreadIdInput::add_io(IOContext& io_ctx)
@@ -11,7 +11,7 @@ namespace shadergraph {
 	}
 	void ThreadCountInput::output_instruction(CompilerContext& ctx, IOContext& io_ctx)
 	{
-		io_ctx.set_instruction(m_output_index, instructions::Load{ vm::globals::THREAD_COUNT }, ctx);
+		io_ctx.set_instruction(m_output_index, Load{ globals::THREAD_COUNT }, ctx);
 	}
 	void ThreadCountInput::add_io(IOContext& io_ctx)
 	{
@@ -19,7 +19,7 @@ namespace shadergraph {
 	}
 	void BarycentricCoordinateInput::output_instruction(CompilerContext& ctx, IOContext& io_ctx)
 	{
-		io_ctx.set_instruction(m_output_index, instructions::Load{ vm::globals::BARYCENTRIC_COORDINATE }, ctx);
+		io_ctx.set_instruction(m_output_index, Load{ globals::BARYCENTRIC_COORDINATE }, ctx);
 	}
 	void BarycentricCoordinateInput::add_io(IOContext& io_ctx)
 	{
@@ -27,7 +27,7 @@ namespace shadergraph {
 	}
 	void HitDistanceInput::output_instruction(CompilerContext& ctx, IOContext& io_ctx)
 	{
-		io_ctx.set_instruction(m_output_index, instructions::Load{ vm::globals::HIT_DISTANCE }, ctx);
+		io_ctx.set_instruction(m_output_index, Load{ globals::HIT_DISTANCE }, ctx);
 	}
 	void HitDistanceInput::add_io(IOContext& io_ctx)
 	{
@@ -35,7 +35,7 @@ namespace shadergraph {
 	}
 	void InstanceIdInput::output_instruction(CompilerContext& ctx, IOContext& io_ctx)
 	{
-		io_ctx.set_instruction(m_output_index, instructions::Load{ vm::globals::INSTANCE_ID }, ctx);
+		io_ctx.set_instruction(m_output_index, Load{ globals::INSTANCE_ID }, ctx);
 	}
 
 	void InstanceIdInput::add_io(IOContext& io_ctx)
@@ -45,11 +45,27 @@ namespace shadergraph {
 
 	void PrimitiveIdInput::output_instruction(CompilerContext& ctx, IOContext& io_ctx)
 	{
-		io_ctx.set_instruction(m_output_index, instructions::Load{ vm::globals::PRIMITIVE_ID }, ctx);
+		io_ctx.set_instruction(m_output_index, Load{ globals::PRIMITIVE_ID }, ctx);
 	}
 
 	void PrimitiveIdInput::add_io(IOContext& io_ctx)
 	{
 		io_ctx.add_output({ "Primitive ID", "primitive_id" });
+	}
+	void WorldPositionInput::output_instruction(CompilerContext& ctx, IOContext& io_ctx)
+	{
+		io_ctx.set_instruction(m_output_index, Load{ globals::WORLD_POSITION }, ctx);
+	}
+	void WorldPositionInput::add_io(IOContext& io_ctx)
+	{
+		io_ctx.add_output({ "World Position", "world_position" });
+	}
+	void RayDirectionInput::output_instruction(CompilerContext& ctx, IOContext& io_ctx)
+	{
+		io_ctx.set_instruction(m_output_index, Load{ globals::RAY_DIRECTION }, ctx);
+	}
+	void RayDirectionInput::add_io(IOContext& io_ctx)
+	{
+		io_ctx.add_output({ "Ray Direction", "ray_direction" });
 	}
 }   // namespace shadergraph

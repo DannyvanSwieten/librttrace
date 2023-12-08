@@ -3,7 +3,7 @@
 namespace shadergraph {
 	void ConstantNode::output_instruction(CompilerContext& ctx, IOContext& io_ctx)
 	{
-		auto output = instructions::Load{ io_ctx.input_value(m_input_index) };
+		auto output = Load{ io_ctx.input_value(m_input_index) };
 		io_ctx.set_instruction(m_output_index, output, ctx);
 	}
 	void ConstantNode::add_io(IOContext& io_ctx)

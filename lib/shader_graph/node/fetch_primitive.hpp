@@ -2,7 +2,7 @@
 #include "node.hpp"
 namespace shadergraph {
 
-	class FetchPrimitive : public Node
+	class FetchPrimitiveNode : public Node
 	{
 	public:
 		void output_instruction(CompilerContext& ctx, IOContext& io_ctx) override;

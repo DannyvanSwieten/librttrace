@@ -2,7 +2,7 @@
 #include <map>
 #include <memory>
 #include <vector>
-#include "../compiler/instructions.hpp"
+#include "instructions.hpp"
 #include "context.hpp"
 
 namespace shadergraph {
@@ -11,7 +11,6 @@ namespace shadergraph {
 	{
 	public:
 		ShaderGraph() = default;
-		ShaderGraph(size_t next_free_register);
 		ShaderGraph(ShaderGraph&& other);
 		~ShaderGraph();
 		struct Connection
@@ -28,16 +27,11 @@ namespace shadergraph {
 		void connect(const Connection& connection);
 		void disconnect(const Connection& connection);
 
-		void set_default_value(size_t node_id, size_t output_id, const Value& value);
+		void set_default_value(size_t node_id, size_t output_id, const Operand& Operand);
 
-		instructions::ShaderProgram generate_ir();
+		std::vector<Instruction> generate_ir();
 
-		size_t next_free_register() const
-		{
-			return m_compiler_ctx.m_next_free_register;
-		}
-
-		Value get_output_value_for_connection(const Connection& connection) const
+		Operand get_output_Operand_for_connection(const Connection& connection) const
 		{
 			const auto& io_ctx = m_io_contexts.at(connection.from_node);
 			return io_ctx.output(connection.from_output).dst;

@@ -1,15 +1,15 @@
 #include "fetch_primitive.hpp"
 
 namespace shadergraph {
-	void FetchPrimitive::output_instruction(CompilerContext& ctx, IOContext& io_ctx)
+	void FetchPrimitiveNode::output_instruction(CompilerContext& ctx, IOContext& io_ctx)
 	{
 		const auto& buffer_index = io_ctx.input_value(m_buffer_index);
-		io_ctx.set_instruction(m_v0_output, instructions::LoadAttribute{ buffer_index, 0 }, ctx);
-		io_ctx.set_instruction(m_v1_output, instructions::LoadAttribute{ buffer_index, 1 }, ctx);
-		io_ctx.set_instruction(m_v2_output, instructions::LoadAttribute{ buffer_index, 2 }, ctx);
+		io_ctx.set_instruction(m_v0_output, LoadAttribute{ buffer_index, 0 }, ctx);
+		io_ctx.set_instruction(m_v1_output, LoadAttribute{ buffer_index, 1 }, ctx);
+		io_ctx.set_instruction(m_v2_output, LoadAttribute{ buffer_index, 2 }, ctx);
 	}
 
-	void FetchPrimitive::add_io(IOContext& io_ctx)
+	void FetchPrimitiveNode::add_io(IOContext& io_ctx)
 	{
 		m_buffer_index = io_ctx.add_input({ "BufferIndex", "buffer_index" }, Float3(0));
 

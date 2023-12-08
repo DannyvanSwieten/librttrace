@@ -2,7 +2,7 @@
 #include "node.hpp"
 
 namespace shadergraph {
-	class Intersect : public Node
+	class IntersectNode : public Node
 	{
 	public:
 		void output_instruction(CompilerContext& ctx, IOContext& io_ctx) override;

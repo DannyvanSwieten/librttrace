@@ -8,7 +8,7 @@
 #include "../resource_ctx.hpp"
 #include "top_level_acceleration_structure.hpp"
 #include "frame_buffer.hpp"
-#include "vm.hpp"
+#include "virtual_machine/vm.hpp"
 #include "../pipeline.hpp"
 #include "ray_generation_program.hpp"
 
@@ -47,7 +47,7 @@ Result<Void> CpuCommandBuffer::trace_rays(const Pipeline* pipeline, ResourceCont
 		const auto start_row = warp * rows_per_warp;
 		const auto end_row = start_row + rows_per_warp;
 		jobs.emplace_back([&, start_row, end_row] {
-			vm::globals::Globals globals;
+			globals::Globals globals;
 			VirtualMachine vm;
 			for (uint32_t j = start_row; j < end_row; j++)
 			{

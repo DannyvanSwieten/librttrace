@@ -60,4 +60,24 @@ namespace shadergraph {
 	private:
 		size_t m_output_index;
 	};
+
+	class WorldPositionInput : public Node
+	{
+	public:
+		void output_instruction(CompilerContext& ctx, IOContext& io_ctx) override;
+		void add_io(IOContext& io_ctx) override;
+
+	private:
+		size_t m_output_index;
+	};
+
+	class RayDirectionInput : public Node
+	{
+	public:
+		void output_instruction(CompilerContext& ctx, IOContext& io_ctx) override;
+		void add_io(IOContext& io_ctx) override;
+
+	private:
+		size_t m_output_index;
+	};
 }   // namespace shadergraph
