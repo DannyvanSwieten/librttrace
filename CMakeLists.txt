@@ -99,6 +99,8 @@ add_library(rtintersect STATIC
     lib/shader_graph/node/fetch_primitive.cpp
     lib/shader_graph/node/mix.hpp
     lib/shader_graph/node/mix.cpp
+    lib/shader_graph/node/smooth_step.hpp
+    lib/shader_graph/node/smooth_step.cpp
     lib/shader_graph/instructions.hpp
 
     lib/vulkan/device.hpp

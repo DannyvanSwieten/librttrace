@@ -100,6 +100,15 @@ void VirtualMachine::execute(const ShaderProgram& program,
 								   // std::cout << "Op Mix: r" << instruction.dst.index << " = " << a << " mix " << b << " " << c << std::endl;
 								   registers[instruction.dst.index] = result;
 							   },
+		                       [&](const shadergraph::SmoothStep& smooth_step) {
+								   const auto a = shadergraph::get_value(smooth_step.a, registers, globals);
+								   const auto b = shadergraph::get_value(smooth_step.b, registers, globals);
+								   const auto c = shadergraph::get_value(smooth_step.c, registers, globals);
+								   const auto result = glm::smoothstep(a.x, b.x, c.x);
+
+								   // std::cout << "Op SmoothStep: r" << instruction.dst.index << " = " << a << " smoothstep " << b << " " << c << std::endl;
+								   registers[instruction.dst.index] = Float4(result);
+							   },
 		                       [&](const shadergraph::Neg& neg) {
 								   // std::cout << "Neg" << std::endl;
 							   },
@@ -160,6 +169,20 @@ void VirtualMachine::execute(const ShaderProgram& program,
 								   const auto result = glm::abs(Float3(src));
 								   // std::cout << "Op Abs: r" << instruction.dst.index << " = "
 			                       //    << "abs( " << src << " )" << std::endl;
+								   registers[instruction.dst.index] = Float4(result, 1.0);
+							   },
+		                       [&](const shadergraph::Sin& sin) {
+								   const auto src = shadergraph::get_value(sin.a, registers, globals);
+								   const auto result = glm::sin(Float3(src));
+								   // std::cout << "Op Sin: r" << instruction.dst.index << " = "
+			                       //    << "sin( " << src << " )" << std::endl;
+								   registers[instruction.dst.index] = Float4(result, 1.0);
+							   },
+		                       [&](const shadergraph::Cos& cos) {
+								   const auto src = shadergraph::get_value(cos.a, registers, globals);
+								   const auto result = glm::cos(Float3(src));
+								   // std::cout << "Op Cos: r" << instruction.dst.index << " = "
+			                       //    << "cos( " << src << " )" << std::endl;
 								   registers[instruction.dst.index] = Float4(result, 1.0);
 							   },
 		                       [&](const shadergraph::Intersect& intersect) {

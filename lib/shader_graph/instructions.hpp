@@ -73,11 +73,28 @@ namespace shadergraph {
 		Operand src;
 	};
 
+	struct Sin
+	{
+		Operand a;
+	};
+
+	struct Cos
+	{
+		Operand a;
+	};
+
 	struct Intersect
 	{
 		Operand origin;
 		Operand direction;
 		Operand acc_index;
+	};
+
+	struct SmoothStep
+	{
+		Operand a;
+		Operand b;
+		Operand c;
 	};
 
 	struct StorePixel
@@ -110,7 +127,7 @@ namespace shadergraph {
 		Operand a;
 	};
 
-	using OpCode = std::variant<Add, Sub, Mul, Div, Dot, Cross, Neg, Mix, Load, LoadAttribute, Store, StorePixel, Normalize, Length, Abs, Intersect>;
+	using OpCode = std::variant<Add, Sub, Mul, Div, Dot, Cross, Neg, Mix, SmoothStep, Load, LoadAttribute, Store, StorePixel, Normalize, Length, Abs, Sin, Cos, Intersect>;
 
 	struct Instruction
 	{

@@ -8,6 +8,7 @@
 #include "../lib/shader_graph/node/store_pixel.hpp"
 #include "../lib/shader_graph/node/fetch_primitive.hpp"
 #include "../lib/shader_graph/node/mix.hpp"
+#include "../lib/shader_graph/node/smooth_step.hpp"
 
 using namespace shadergraph;
 
@@ -207,13 +208,17 @@ shadergraph::ShaderGraph create_circle_program()
 	graph.connect(shadergraph::ShaderGraph::Connection{ abs, 0, sub, 0 });
 	graph.connect(shadergraph::ShaderGraph::Connection{ edge_radius, 0, sub, 1 });
 
+	// Smooth step the distance
+	size_t smooth_step = graph.add_node(std::make_unique<shadergraph::SmoothStepNode>());
+	graph.connect(shadergraph::ShaderGraph::Connection{ sub, 0, smooth_step, 2 });
+
 	// Store the pixel with the value of the distance
 	size_t store_pixel = graph.add_node(std::make_unique<shadergraph::StorePixelNode>());
 	size_t image_index = graph.add_node(std::make_unique<shadergraph::ConstantNode>());
 	graph.set_default_value(image_index, 0, Float3(0, 0, 0));
 	graph.connect(shadergraph::ShaderGraph::Connection{ image_index, 0, store_pixel, 0 });
 	graph.connect(shadergraph::ShaderGraph::Connection{ thread_id, 0, store_pixel, 1 });
-	graph.connect(shadergraph::ShaderGraph::Connection{ sub, 0, store_pixel, 2 });
+	graph.connect(shadergraph::ShaderGraph::Connection{ smooth_step, 0, store_pixel, 2 });
 
 	return graph;
 }
