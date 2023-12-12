@@ -185,6 +185,13 @@ void VirtualMachine::execute(const ShaderProgram& program,
 			                       //    << "cos( " << src << " )" << std::endl;
 								   registers[instruction.dst.index] = Float4(result, 1.0);
 							   },
+		                       [&](const shadergraph::Fract& fract) {
+								   const auto src = shadergraph::get_value(fract.a, registers, globals);
+								   const auto result = glm::fract(src);
+								   // std::cout << "Op Fract: r" << instruction.dst.index << " = "
+			                       //    << "fract( " << src << " )" << std::endl;
+								   registers[instruction.dst.index] = result;
+							   },
 		                       [&](const shadergraph::Intersect& intersect) {
 								   const auto& ray_origin = shadergraph::get_value(intersect.origin, registers, globals);
 								   const auto& ray_direction = shadergraph::get_value(intersect.direction, registers, globals);

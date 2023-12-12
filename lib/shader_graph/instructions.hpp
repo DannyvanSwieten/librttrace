@@ -127,7 +127,31 @@ namespace shadergraph {
 		Operand a;
 	};
 
-	using OpCode = std::variant<Add, Sub, Mul, Div, Dot, Cross, Neg, Mix, SmoothStep, Load, LoadAttribute, Store, StorePixel, Normalize, Length, Abs, Sin, Cos, Intersect>;
+	struct Fract
+	{
+		Operand a;
+	};
+
+	using OpCode = std::variant<Add,
+	                            Sub,
+	                            Mul,
+	                            Div,
+	                            Dot,
+	                            Cross,
+	                            Neg,
+	                            Mix,
+	                            SmoothStep,
+	                            Load,
+	                            LoadAttribute,
+	                            Store,
+	                            StorePixel,
+	                            Normalize,
+	                            Length,
+	                            Abs,
+	                            Sin,
+	                            Cos,
+	                            Fract,
+	                            Intersect>;
 
 	struct Instruction
 	{
