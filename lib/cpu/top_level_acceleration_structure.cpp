@@ -28,12 +28,8 @@ HitRecord CpuTopLevelAccelerationStructure::intersect(const Float3& origin, cons
 
 	for (const auto& instance : m_instances)
 	{
-		const auto inverse_transform = glm::inverse(instance.m_transform);
-		const auto inverse_origin = inverse_transform * glm::vec4(origin, 1.0);
-		const auto inverse_direction = normalize(inverse_transform * glm::vec4(direction, 0.0));
-
 		const auto cpu_acceleration_structure = static_cast<const CpuBottomLevelAccelerationStructure* const>(instance.m_acceleration_structure);
-		cpu_acceleration_structure->intersect(instance.m_transform, inverse_origin, inverse_direction, 0.01f, record);
+		cpu_acceleration_structure->intersect(instance.m_transform, origin, direction, 0.01f, record);
 		if (record.t < t)
 		{
 			t = record.t;

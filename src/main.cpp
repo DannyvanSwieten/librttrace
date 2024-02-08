@@ -57,11 +57,7 @@ int main()
 	const auto ir3 = miss_graph.generate_ir();
 	auto miss = compiler.compile_miss_program(ir3).expect("Failed to compile miss program");
 
-	auto circle_graph = create_circle_program();
-	const auto ir4 = circle_graph.generate_ir();
-	auto circle = compiler.compile_ray_generation_program(ir4).expect("Failed to compile circle program");
-
-	Pipeline pipeline(circle, closest_hit, miss, nullptr, 0);
+	Pipeline pipeline(ray_gen, closest_hit, miss, nullptr, 0);
 
 	ResourceContext resource_ctx;
 	resource_ctx.add_frame_buffer(0, frame_buffer);

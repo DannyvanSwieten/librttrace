@@ -133,7 +133,7 @@ void VirtualMachine::execute(const ShaderProgram& program,
 								   const auto cpu_index_buffer = dynamic_cast<const CpuIndexBuffer*>(instance.m_index_buffer);
 								   const auto index = cpu_index_buffer->operator[](primitive_index + vertex_index);
 								   const auto& vertex = cpu_vertex_buffer->float3(index * 3);
-								   registers[instruction.dst.index] = Float4(vertex, 1.0);
+								   registers[instruction.dst.index] = instance.m_transform * Float4(vertex, 1.0);
 							   },
 		                       [&](const shadergraph::Store& store) {
 								   const auto src = shadergraph::get_value(store.src, registers, globals);

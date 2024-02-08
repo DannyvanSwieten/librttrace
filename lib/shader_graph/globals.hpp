@@ -16,5 +16,4 @@ namespace globals {
 	static constexpr size_t GLOBALS_COUNT = 9;
 
 	using Globals = std::array<Float3, GLOBALS_COUNT>;
-
 }   // namespace globals

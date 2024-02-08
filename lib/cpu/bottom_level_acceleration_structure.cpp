@@ -233,15 +233,19 @@ CpuBottomLevelAccelerationStructure::Split CpuBottomLevelAccelerationStructure::
 
 void CpuBottomLevelAccelerationStructure::intersect(const Mat4x4& transform, const Float3& origin, const Float3& dir, float t_min, HitRecord& record) const
 {
-	// Intersect bvh
-	std::array<uint32_t, 32> stack;
-	uint32_t node_index = 0;
-	uint32_t stack_ptr = 0;
-
 	if (!intersect_bounding_box(origin, dir, m_bounding_box.transformed(transform), t_min, record.t))
 	{
 		return;
 	}
+
+	const auto inverse_transform = glm::inverse(transform);
+	const auto inverse_origin = inverse_transform * glm::vec4(origin, 1.0);
+	const auto inverse_direction = normalize(inverse_transform * glm::vec4(dir, 0.0));
+
+	// Intersect bvh
+	std::array<uint32_t, 32> stack;
+	uint32_t node_index = 0;
+	uint32_t stack_ptr = 0;
 
 	while (true)
 	{
@@ -258,7 +262,7 @@ void CpuBottomLevelAccelerationStructure::intersect(const Mat4x4& transform, con
 				const auto v1 = Float3(m_vertex_buffer->operator[](i1), m_vertex_buffer->operator[](i1 + 1), m_vertex_buffer->operator[](i1 + 2));
 				const auto v2 = Float3(m_vertex_buffer->operator[](i2), m_vertex_buffer->operator[](i2 + 1), m_vertex_buffer->operator[](i2 + 2));
 				float t, u, v;
-				if (intersect_muller_trumbore(origin, dir, v0, v1, v2, t, u, v))
+				if (intersect_muller_trumbore(inverse_origin, inverse_direction, v0, v1, v2, t, u, v))
 				{
 					if (t > 0.01 && t < record.t)
 					{
@@ -288,8 +292,8 @@ void CpuBottomLevelAccelerationStructure::intersect(const Mat4x4& transform, con
 			const auto& right_bb = m_nodes[right].m_bounding_box;
 			float t_left, t_right;
 
-			const auto hit_left = intersect_bounding_box(origin, dir, left_bb, t_left, record.t);
-			const auto hit_right = intersect_bounding_box(origin, dir, right_bb, t_right, record.t);
+			const auto hit_left = intersect_bounding_box(origin, dir, left_bb.transformed(transform), t_left, record.t);
+			const auto hit_right = intersect_bounding_box(origin, dir, right_bb.transformed(transform), t_right, record.t);
 			if (hit_left && hit_right)
 			{
 				if (t_left < t_right)
