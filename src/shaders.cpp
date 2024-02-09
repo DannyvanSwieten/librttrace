@@ -119,7 +119,7 @@ shadergraph::ShaderGraph create_closest_hit_program()
 	graph.connect(shadergraph::ShaderGraph::Connection{ image_index, 0, store_pixel, 0 });
 	size_t thread_id = graph.add_node(std::make_unique<shadergraph::ThreadIdInput>());
 	graph.connect(shadergraph::ShaderGraph::Connection{ thread_id, 0, store_pixel, 1 });
-	graph.connect(shadergraph::ShaderGraph::Connection{ mul, 0, store_pixel, 2 });
+	graph.connect(shadergraph::ShaderGraph::Connection{ barycentric_coordinates, 0, store_pixel, 2 });
 
 	return graph;
 }
@@ -154,71 +154,5 @@ shadergraph::ShaderGraph create_miss_program()
 	size_t thread_id = graph.add_node(std::make_unique<shadergraph::ThreadIdInput>());
 	graph.connect(shadergraph::ShaderGraph::Connection{ thread_id, 0, store_pixel, 1 });
 	graph.connect(shadergraph::ShaderGraph::Connection{ mix, 0, store_pixel, 2 });
-	return graph;
-}
-
-shadergraph::ShaderGraph create_circle_program()
-{
-	shadergraph::ShaderGraph graph;
-	// Current Pixel
-	size_t thread_id = graph.add_node(std::make_unique<shadergraph::ThreadIdInput>());
-	// Resolution
-	size_t thread_count = graph.add_node(std::make_unique<shadergraph::ThreadCountInput>());
-	// Divide them to get the normalized pixel position
-	size_t div = graph.add_node(std::make_unique<shadergraph::BinaryOperatorNode<Div>>());
-
-	graph.connect(shadergraph::ShaderGraph::Connection{ thread_id, 0, div, 0 });
-	graph.connect(shadergraph::ShaderGraph::Connection{ thread_count, 0, div, 1 });
-
-	// scale it by 2 to get to the range [0 - 2]
-	size_t scale = graph.add_node(std::make_unique<shadergraph::ConstantNode>());
-	graph.set_default_value(scale, 0, Operand{ Float3(2.0f, 2.0f, 1.0f) });
-	size_t mul = graph.add_node(std::make_unique<shadergraph::BinaryOperatorNode<Mul>>());
-
-	graph.connect(shadergraph::ShaderGraph::Connection{ div, 0, mul, 0 });
-	graph.connect(shadergraph::ShaderGraph::Connection{ scale, 0, mul, 1 });
-
-	// subtract 1 to get to the range [-1 - 1]
-	size_t offset = graph.add_node(std::make_unique<shadergraph::ConstantNode>());
-	graph.set_default_value(offset, 0, Operand{ Float3(1.f, 1.f, 0.f) });
-
-	size_t sub_node = graph.add_node(std::make_unique<shadergraph::BinaryOperatorNode<Sub>>());
-	graph.connect(shadergraph::ShaderGraph::Connection{ mul, 0, sub_node, 0 });
-	graph.connect(shadergraph::ShaderGraph::Connection{ offset, 0, sub_node, 1 });
-
-	// Calculate the length of the vector ( Distance to center )
-	size_t length = graph.add_node(std::make_unique<shadergraph::UnaryOperatorNode<Length>>());
-	graph.connect(shadergraph::ShaderGraph::Connection{ sub_node, 0, length, 0 });
-
-	// Subtract the radius
-	size_t radius = graph.add_node(std::make_unique<shadergraph::ConstantNode>());
-	graph.set_default_value(radius, 0, Operand{ Float3(0.5f, 0.5, 0.5) });
-
-	size_t distance = graph.add_node(std::make_unique<shadergraph::BinaryOperatorNode<Sub>>());
-	graph.connect(shadergraph::ShaderGraph::Connection{ length, 0, distance, 0 });
-	graph.connect(shadergraph::ShaderGraph::Connection{ radius, 0, distance, 1 });
-
-	size_t abs = graph.add_node(std::make_unique<shadergraph::UnaryOperatorNode<Abs>>());
-	graph.connect(shadergraph::ShaderGraph::Connection{ distance, 0, abs, 0 });
-
-	size_t edge_radius = graph.add_node(std::make_unique<shadergraph::ConstantNode>());
-	graph.set_default_value(edge_radius, 0, Operand{ Float3(0.01f, 0.01, 0.01) });
-
-	size_t sub = graph.add_node(std::make_unique<shadergraph::BinaryOperatorNode<Sub>>());
-	graph.connect(shadergraph::ShaderGraph::Connection{ abs, 0, sub, 0 });
-	graph.connect(shadergraph::ShaderGraph::Connection{ edge_radius, 0, sub, 1 });
-
-	// Smooth step the distance
-	size_t smooth_step = graph.add_node(std::make_unique<shadergraph::SmoothStepNode>());
-	graph.connect(shadergraph::ShaderGraph::Connection{ sub, 0, smooth_step, 2 });
-
-	// Store the pixel with the value of the distance
-	size_t store_pixel = graph.add_node(std::make_unique<shadergraph::StorePixelNode>());
-	size_t image_index = graph.add_node(std::make_unique<shadergraph::ConstantNode>());
-	graph.set_default_value(image_index, 0, Float3(0, 0, 0));
-	graph.connect(shadergraph::ShaderGraph::Connection{ image_index, 0, store_pixel, 0 });
-	graph.connect(shadergraph::ShaderGraph::Connection{ thread_id, 0, store_pixel, 1 });
-	graph.connect(shadergraph::ShaderGraph::Connection{ smooth_step, 0, store_pixel, 2 });
-
 	return graph;
 }

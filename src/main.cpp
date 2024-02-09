@@ -14,8 +14,8 @@
 
 #include "cube.hpp"
 
-constexpr uint32_t width = 512;
-constexpr uint32_t height = 512;
+constexpr uint32_t width = 1920;
+constexpr uint32_t height = 1080;
 
 int main()
 {
@@ -40,10 +40,13 @@ int main()
 	auto command_buffer = device->alloc_command_buffer().expect("Failed to create command buffer");
 	command_buffer->build_bottom_level_acceleration_structure(acceleration_structure, vertex_buffer, 3, index_buffer);
 
-	const auto instance = acceleration_structure->create_instance(0, InstanceMask::Opaque, Mat4x4(1.0));
+	const auto instance = acceleration_structure->create_instance(0, InstanceMask::Opaque, glm::translate(Mat4x4(1.0), Float3(0, 0.75, 0)));
+	const auto instance2 = acceleration_structure->create_instance(1, InstanceMask::Opaque, glm::translate(Mat4x4(1.0), Float3(1, 1, 1)));
 
-	auto tlas = device->alloc_top_level_acceleration_structure(&instance, 1).expect("Failed to create top level acceleration structure");
-	command_buffer->build_top_level_acceleration_structure(tlas, &instance, 1);
+	const auto instances = std::array{ instance, instance2 };
+
+	auto tlas = device->alloc_top_level_acceleration_structure(instances.data(), instances.size()).expect("Failed to create top level acceleration structure");
+	command_buffer->build_top_level_acceleration_structure(tlas, instances.data(), instances.size());
 
 	auto ray_gen_graph = create_ray_gen_program();
 	const auto ir = ray_gen_graph.generate_ir();

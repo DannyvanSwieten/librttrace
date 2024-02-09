@@ -7,7 +7,7 @@ CpuTopLevelAccelerationStructure::CpuTopLevelAccelerationStructure(const Instanc
 	{
 		const auto& instance = instances[i];
 		const auto cpu_acceleration_structure = static_cast<const CpuBottomLevelAccelerationStructure* const>(instance.m_acceleration_structure);
-		m_bounding_box.grow(cpu_acceleration_structure->bounding_box());
+		m_bounding_box.grow(cpu_acceleration_structure->bounding_box().transformed(instance.m_transform));
 		m_instances.push_back(instances[i]);
 	}
 }

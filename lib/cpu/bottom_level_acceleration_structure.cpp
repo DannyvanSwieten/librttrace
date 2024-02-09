@@ -233,14 +233,15 @@ CpuBottomLevelAccelerationStructure::Split CpuBottomLevelAccelerationStructure::
 
 void CpuBottomLevelAccelerationStructure::intersect(const Mat4x4& transform, const Float3& origin, const Float3& dir, float t_min, HitRecord& record) const
 {
-	if (!intersect_bounding_box(origin, dir, m_bounding_box.transformed(transform), t_min, record.t))
+	const auto t_max = std::numeric_limits<float>::max();
+	const auto inv_transform = glm::inverse(transform);
+	const auto inv_origin = inv_transform * Float4(origin, 1.0);
+	const auto inv_dir = inv_transform * Float4(dir, 0.0);
+
+	if (!intersect_bounding_box(inv_origin, inv_dir, m_bounding_box, t_min, t_max))
 	{
 		return;
 	}
-
-	const auto inverse_transform = glm::inverse(transform);
-	const auto inverse_origin = inverse_transform * glm::vec4(origin, 1.0);
-	const auto inverse_direction = normalize(inverse_transform * glm::vec4(dir, 0.0));
 
 	// Intersect bvh
 	std::array<uint32_t, 32> stack;
@@ -262,7 +263,11 @@ void CpuBottomLevelAccelerationStructure::intersect(const Mat4x4& transform, con
 				const auto v1 = Float3(m_vertex_buffer->operator[](i1), m_vertex_buffer->operator[](i1 + 1), m_vertex_buffer->operator[](i1 + 2));
 				const auto v2 = Float3(m_vertex_buffer->operator[](i2), m_vertex_buffer->operator[](i2 + 1), m_vertex_buffer->operator[](i2 + 2));
 				float t, u, v;
-				if (intersect_muller_trumbore(inverse_origin, inverse_direction, v0, v1, v2, t, u, v))
+				// Mat3x4 tr = transform;
+				// const auto vt0 = transform * Float4(v0, 1.0);
+				// const auto vt1 = transform * Float4(v1, 1.0);
+				// const auto vt2 = transform * Float4(v2, 1.0);
+				if (intersect_muller_trumbore(inv_origin, inv_dir, v0, v1, v2, t, u, v))
 				{
 					if (t > 0.01 && t < record.t)
 					{
@@ -292,8 +297,8 @@ void CpuBottomLevelAccelerationStructure::intersect(const Mat4x4& transform, con
 			const auto& right_bb = m_nodes[right].m_bounding_box;
 			float t_left, t_right;
 
-			const auto hit_left = intersect_bounding_box(origin, dir, left_bb.transformed(transform), t_left, record.t);
-			const auto hit_right = intersect_bounding_box(origin, dir, right_bb.transformed(transform), t_right, record.t);
+			const auto hit_left = intersect_bounding_box(inv_origin, inv_dir, left_bb, t_left, t_max);
+			const auto hit_right = intersect_bounding_box(inv_origin, inv_dir, right_bb, t_right, t_max);
 			if (hit_left && hit_right)
 			{
 				if (t_left < t_right)
