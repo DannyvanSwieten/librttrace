@@ -13,14 +13,8 @@
 #include "../../shader_graph/value.hpp"
 #include "../../shader_graph/instructions.hpp"
 #include "../miss_program.hpp"
-template <class... Ts>
-struct overloaded : Ts...
-{
-	using Ts::operator()...;
-};
 
-template <class... Ts>
-overloaded(Ts...) -> overloaded<Ts...>;
+#include "../../overloaded.hpp"
 
 void VirtualMachine::execute(
 	const Pipeline* pipeline, ResourceContext* ctx, globals::Globals& globals, int thread_id_x, int thread_id_y, int thread_count_x, int thread_count_y)

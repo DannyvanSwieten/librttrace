@@ -153,6 +153,9 @@ namespace shadergraph {
 	                            Fract,
 	                            Intersect>;
 
+	std::string_view to_string(const OpCode& op_code);
+	std::string_view to_display_name(const OpCode& op_code);
+
 	struct Instruction
 	{
 		OpCode op_code;

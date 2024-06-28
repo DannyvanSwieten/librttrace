@@ -2,6 +2,7 @@
 #include "cpu/ray_generation_program.hpp"
 #include "cpu/closest_hit_program.hpp"
 #include "cpu/miss_program.hpp"
+#include "gpu/ray_generation_program.hpp"
 ShaderCompiler::ShaderCompiler(Api api) : m_api(api)
 {}
 
@@ -11,6 +12,8 @@ Result<RayGenerationProgram*> ShaderCompiler::compile_ray_generation_program(con
 	{
 		case Api::CPU:
 			return Result<RayGenerationProgram*>::from_value(new CpuRayGenerationProgram(program));
+		case Api::VULKAN_RTX:
+			return Result<RayGenerationProgram*>::from_value(new GpuRayGenerationProgramGlsl(program));
 		default:
 			return Result<RayGenerationProgram*>::from_error("Unsupported API");
 	}

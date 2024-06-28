@@ -9,6 +9,7 @@ find_package(Vulkan REQUIRED)
 # Create library target
 add_library(rtintersect STATIC
     lib/api.hpp
+    lib/overloaded.hpp
     lib/device_factory.hpp
     lib/device_factory.cpp
     lib/device.hpp
@@ -74,6 +75,9 @@ add_library(rtintersect STATIC
     lib/cpu/virtual_machine/vm.cpp
     lib/cpu/virtual_machine/shader_program.hpp
 
+    lib/gpu/ray_generation_program.hpp
+    lib/gpu/ray_generation_program.cpp
+
     lib/shader_graph/shader_graph.hpp
     lib/shader_graph/shader_graph.cpp
     lib/shader_graph/context.hpp
@@ -102,6 +106,15 @@ add_library(rtintersect STATIC
     lib/shader_graph/node/smooth_step.hpp
     lib/shader_graph/node/smooth_step.cpp
     lib/shader_graph/instructions.hpp
+    lib/shader_graph/instructions.cpp
+    lib/shader_graph/overload.hpp
+    lib/shader_graph/overload.cpp
+    lib/shader_graph/node/constructor.hpp
+    lib/shader_graph/node/constructor.cpp
+    lib/shader_graph/constructor_cache.hpp
+    lib/shader_graph/constructor_cache.cpp
+    lib/shader_graph/document.hpp
+    lib/shader_graph/document.cpp
 
     lib/vulkan/device.hpp
     lib/vulkan/device.cpp

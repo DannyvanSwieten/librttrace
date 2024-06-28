@@ -1,10 +1,2 @@
-./libs/*
-./examples/vulkan/1003_RenderPassConverter/templates
-./resolume/research/PluginStarter/bin/templates
-./juce-static
-./resolume resapi/resapi/libs
-./resolume codec
 ./build*/*
-./wire/dependencies
-./vcpkg
 ./out*/*

@@ -4,8 +4,11 @@
 #include <vector>
 #include "instructions.hpp"
 #include "context.hpp"
+#include "overload.hpp"
+#include "connection.hpp"
 
 namespace shadergraph {
+
 	class Node;
 	class ShaderGraph
 	{
@@ -13,15 +16,6 @@ namespace shadergraph {
 		ShaderGraph() = default;
 		ShaderGraph(ShaderGraph&& other);
 		~ShaderGraph();
-		struct Connection
-		{
-			size_t from_node;
-			size_t from_output;
-			size_t to_node;
-			size_t to_input;
-
-			bool operator==(const Connection& other) const = default;
-		};
 
 		size_t add_node(std::unique_ptr<Node> node);
 		void connect(const Connection& connection);

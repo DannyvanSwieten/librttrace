@@ -27,6 +27,9 @@ namespace shadergraph {
 
 	void ShaderGraph::connect(const Connection& connection)
 	{
+		// const auto& from_io_ctx = m_io_contexts.at(connection.from_node);
+		// auto& to_io_ctx = m_io_contexts.at(connection.to_node);
+		// to_io_ctx.set_input_type(connection.to_input, from_io_ctx.output_type(connection.from_output));
 		m_connections.push_back(connection);
 		topological_sort();
 	}

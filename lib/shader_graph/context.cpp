@@ -39,6 +39,16 @@ namespace shadergraph {
 		assert(false);
 		return {};
 	}
+	Type IOContext::output_type(size_t index) const
+	{
+		auto it = m_output_value.find(index);
+		if (it != m_output_value.end())
+		{
+			return it->second.instruction.dst.type;
+		}
+		assert(false);
+		return {};
+	}
 	void IOContext::set_input_value(size_t index, const Operand& Operand)
 	{
 		auto it = m_input_value.find(index);

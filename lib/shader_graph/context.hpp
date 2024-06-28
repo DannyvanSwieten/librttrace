@@ -34,6 +34,7 @@ namespace shadergraph {
 		const Operand& input_value(size_t index) const;
 		const Instruction& output(size_t index) const;
 
+		Type output_type(size_t index) const;
 		void set_input_value(size_t index, const Operand& Operand);
 		void set_instruction(size_t index, const OpCode& op_code, CompilerContext& compiler_ctx);
 

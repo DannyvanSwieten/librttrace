@@ -5,6 +5,9 @@
 #include "resource_ctx.hpp"
 #include "image.hpp"
 #include <cpu/virtual_machine/vm.hpp>
+#include <shader_graph/constructor_cache.hpp>
+#include <shader_graph/document.hpp>
+#include <shader_graph/node/binary_operator.hpp>
 
 #include "shader_compiler.hpp"
 
@@ -48,6 +51,18 @@ int main()
 	auto tlas = device->alloc_top_level_acceleration_structure(instances.data(), instances.size()).expect("Failed to create top level acceleration structure");
 	command_buffer->build_top_level_acceleration_structure(tlas, instances.data(), instances.size());
 
+	shadergraph::ConstructorCache cache;
+	cache.register_ctor(std::make_unique<shadergraph::BinaryOperatorConstructor<shadergraph::Add>>());
+	cache.register_ctor(std::make_unique<shadergraph::BinaryOperatorConstructor<shadergraph::Sub>>());
+	cache.register_ctor(std::make_unique<shadergraph::BinaryOperatorConstructor<shadergraph::Mul>>());
+	cache.register_ctor(std::make_unique<shadergraph::BinaryOperatorConstructor<shadergraph::Div>>());
+	cache.register_ctor(std::make_unique<shadergraph::BinaryOperatorConstructor<shadergraph::Dot>>());
+	cache.register_ctor(std::make_unique<shadergraph::BinaryOperatorConstructor<shadergraph::Cross>>());
+
+	shadergraph::Document document(cache);
+	document.add_node(0, "add");
+	document.add_node(1, "sub");
+
 	auto ray_gen_graph = create_ray_gen_program();
 	const auto ir = ray_gen_graph.generate_ir();
 	auto closest_hit_graph = create_closest_hit_program();
@@ -59,6 +74,9 @@ int main()
 	auto miss_graph = create_miss_program();
 	const auto ir3 = miss_graph.generate_ir();
 	auto miss = compiler.compile_miss_program(ir3).expect("Failed to compile miss program");
+
+	ShaderCompiler compiler2(Api::VULKAN_RTX);
+	auto ray_gen2 = compiler2.compile_ray_generation_program(ir).expect("Failed to compile ray generation program");
 
 	Pipeline pipeline(ray_gen, closest_hit, miss, nullptr, 0);
 
