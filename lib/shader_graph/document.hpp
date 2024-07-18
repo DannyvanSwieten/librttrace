@@ -18,6 +18,7 @@ namespace shadergraph {
 		Document(ConstructorCache& registry);
 		void add_node(size_t node_uid, const std::string& ctor_uid);
 		void connect(size_t from_node_uid, size_t from_slot, size_t to_node_uid, size_t to_slot);
+		void set_constant(size_t node_uid, size_t slot, const Value& value);
 
 	private:
 		struct Slot

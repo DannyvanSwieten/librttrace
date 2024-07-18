@@ -47,4 +47,9 @@ namespace shadergraph {
 		// Add the connection
 		m_connections.emplace_back(Connection{ from_node_uid, from_output, to_node_uid, to_input });
 	}
+	void Document::set_constant(size_t node_uid, size_t slot, const Value& value)
+	{
+		auto& slot_data = m_slots[node_uid];
+		auto& overload = slot_data.m_overload;
+	}
 }   // namespace shadergraph

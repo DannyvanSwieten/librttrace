@@ -8,6 +8,7 @@
 #include <shader_graph/constructor_cache.hpp>
 #include <shader_graph/document.hpp>
 #include <shader_graph/node/binary_operator.hpp>
+#include <shader_graph/node/constant.hpp>
 
 #include "shader_compiler.hpp"
 

@@ -47,16 +47,28 @@ namespace shadergraph {
 
 		std::vector<Overload> overloads() const override
 		{
-			if constexpr (std::is_same_v<T, Add> || std::is_same_v<T, Sub> || std::is_same_v<T, Mul> || std::is_same_v<T, Div> || std::is_same_v<T, Dot>)
+			if constexpr (std::is_same_v<T, Add> || std::is_same_v<T, Sub> || std::is_same_v<T, Mul> || std::is_same_v<T, Div>)
 			{
-				return { Overload{ std::array{ Type::Float, Type::Float }, Type::Float },
-					     Overload{ std::array{ Type::Float2, Type::Float2 }, Type::Float2 },
-					     Overload{ std::array{ Type::Float3, Type::Float3 }, Type::Float3 },
-					     Overload{ std::array{ Type::Float4, Type::Float4 }, Type::Float4 } };
+				return {
+					Overload().with_args(Type::Float, Type::Float).with_return(Type::Float),
+					Overload().with_args(Type::Float2, Type::Float2).with_return(Type::Float2),
+					Overload().with_args(Type::Float3, Type::Float3).with_return(Type::Float3),
+					Overload().with_args(Type::Float4, Type::Float4).with_return(Type::Float4),
+				};
 			}
 			else if constexpr (std::is_same_v<T, Cross>)
 			{
-				return { Overload{ std::array{ Type::Float3, Type::Float3 }, Type::Float } };
+				return {
+					Overload().with_args(Type::Float3, Type::Float3).with_return(Type::Float3),
+				};
+			}
+			else if constexpr (std::is_same_v<T, Dot>)
+			{
+				return {
+					Overload().with_args(Type::Float2, Type::Float2).with_return(Type::Float),
+					Overload().with_args(Type::Float3, Type::Float3).with_return(Type::Float),
+					Overload().with_args(Type::Float4, Type::Float4).with_return(Type::Float),
+				};
 			}
 			else
 			{

@@ -2,18 +2,13 @@
 #include "type.hpp"
 #include <vector>
 #include <span>
+#include <variant>
 
 namespace shadergraph {
-
+	using Argument = std::variant<Type, int>;
 	class Overload
 	{
 	public:
-		struct Argument
-		{
-			Type type;
-			bool operator==(const Argument& other) const = default;
-		};
-
 		struct Return
 		{
 			Type type;
@@ -21,7 +16,19 @@ namespace shadergraph {
 		};
 
 		Overload() = default;
-		Overload(const std::span<const Type> args, const Type ret);
+
+		template <typename... Args>
+		Overload& with_args(Args&&... args)
+		{
+			(m_args.emplace_back(std::forward<Args>(args)), ...);
+			return *this;
+		}
+
+		Overload& with_return(Type type)
+		{
+			m_return.type = type;
+			return *this;
+		}
 
 		bool operator==(const Overload& other) const;
 
@@ -32,7 +39,7 @@ namespace shadergraph {
 
 		void add_argument(const Type type)
 		{
-			m_args.emplace_back(Argument{ .type = type });
+			m_args.emplace_back(Argument{ type });
 		}
 
 		void set_return(const Return& ret)
@@ -42,7 +49,7 @@ namespace shadergraph {
 
 		void set_type(size_t index, Type type)
 		{
-			m_args[index].type = type;
+			m_args[index] = type;
 		}
 
 		Type return_type() const

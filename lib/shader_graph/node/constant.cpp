@@ -13,7 +13,10 @@ namespace shadergraph {
 	}
 	std::vector<Overload> ConstantNodeConstructor::overloads() const
 	{
-		return { Overload{ {}, Type::Float }, Overload{ {}, Type::Float2 }, Overload{ {}, Type::Float3 }, Overload{ {}, Type::Float4 } };
+		return { Overload().with_args(0).with_return(Type::Float),
+			     Overload().with_args(1).with_return(Type::Float2),
+			     Overload().with_args(2).with_return(Type::Float3),
+			     Overload().with_args(3).with_return(Type::Float4) };
 	}
 	Node* ConstantNodeConstructor::construct(const Overload& overload) const
 	{
